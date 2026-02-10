@@ -1,0 +1,103 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+/* =========================
+   ORGANIZATION
+========================= */
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  status    String
+  plan      String
+  processes Process[]
+  createdAt DateTime @default(now())
+}
+
+/* =========================
+   PROCESS
+========================= */
+model Process {
+  id             String        @id @default(uuid())
+  name           String
+  status         String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  steps      ProcessStep[]
+  executions Execution[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/* =========================
+   PROCESS STEP
+========================= */
+model ProcessStep {
+  id        String   @id @default(uuid())
+  processId String
+  name      String
+  order     Int
+
+  process    Process         @relation(fields: [processId], references: [id], onDelete: Cascade)
+  executions ExecutionStep[] @relation("ProcessStepExecutions")
+
+  @@unique([processId, order])
+}
+
+/* =========================
+   EXECUTION
+========================= */
+model Execution {
+  id        String   @id @default(uuid())
+  processId String
+  status    String
+  startedAt DateTime @default(now())
+
+  process Process @relation(fields: [processId], references: [id])
+  steps   ExecutionStep[] @relation("ExecutionSteps")
+}
+
+/* =========================
+   EXECUTION STEP
+========================= */
+model ExecutionStep {
+  id          String   @id @default(uuid())
+  executionId String
+  stepId      String
+  status      StepStatus
+
+  execution   Execution    @relation(fields: [executionId], references: [id], name: "ExecutionSteps")
+  processStep ProcessStep  @relation(fields: [stepId], references: [id], name: "ProcessStepExecutions")
+
+  @@unique([executionId, stepId])
+}
+
+/* =========================
+   OUTBOX
+========================= */
+model Outbox {
+  id         String   @id @default(uuid())
+  eventName  String
+  payload    Json
+  published  Boolean  @default(false)
+  occurredOn DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+/* =========================
+   ENUMS
+========================= */
+enum StepStatus {
+  PENDING
+  DONE
+  FAILED
+}
