@@ -15,9 +15,6 @@ export interface CreateProcessInput {
     }[];
 }
 
-export interface CreateProcessInputExtended extends CreateProcessInput {
-    orderId: string;
-}
 
 export class CreateAndActivateProcess {
     constructor(
@@ -26,7 +23,7 @@ export class CreateAndActivateProcess {
         private readonly unitOfWork: UnitOfWork
     ) {}
 
-    async execute(input: CreateProcessInputExtended): Promise<void> {
+    async execute(input: CreateProcessInput): Promise<void> {
         const canCreate = await this.subscriptionService.canCreateProcess(input.organizationId);
         if (!canCreate) throw new Error("Organization cannot create more processes: Plan limit reached");
 
