@@ -201,6 +201,11 @@ Para incidentes de producción:
 
 Si haces esto bien, ya estarás construyendo con mentalidad de producción real.
 
+<<<<<<< HEAD
+=======
+Checklist ejecutable de cierre V1: `V1_RELEASE_CHECKLIST.md`.
+
+>>>>>>> 165008c (docs: add executable V1 release checklist and link from blueprint)
 
 ## 11) ¿Cómo saber si “conecta bien” entre ambos repos?
 
