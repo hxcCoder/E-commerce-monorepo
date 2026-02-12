@@ -13,6 +13,8 @@ describe('ConfirmPayment', () => {
             new OrderItem({ productId: 'p1', quantity: 1, unitPrice: 100 }),
         ]);
 
+        order.requestPayment();
+
         const repo = new InMemoryOrderRepository();
         repo.saveWithId('order-1', order);
 
@@ -36,6 +38,8 @@ it('marks order as FAILED when payment is rejected', async () => {
     const order = Order.create([
         new OrderItem({ productId: 'p1', quantity: 1, unitPrice: 100 }),
     ]);
+
+    order.requestPayment();
 
     const repo = new InMemoryOrderRepository();
     repo.saveWithId('order-2', order);

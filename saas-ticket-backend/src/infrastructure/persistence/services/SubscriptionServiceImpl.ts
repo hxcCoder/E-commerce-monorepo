@@ -7,16 +7,6 @@ export class SubscriptionServiceImpl implements SubscriptionService {
   private prisma = getPrismaClient();
 
   async canCreateProcess(organizationId: string): Promise<boolean> {
-    const subscription = await this.prisma.subscription.findFirst({
-      where: {
-        organizationId,
-        status: "ACTIVE",
-      },
-      include: { plan: true },
-    });
-
-    if (!subscription) return false;
-
     const activeProcesses = await this.prisma.process.count({
       where: {
         organizationId,
@@ -24,6 +14,8 @@ export class SubscriptionServiceImpl implements SubscriptionService {
       },
     });
 
-    return activeProcesses < subscription.plan.maxActiveProcesses;
+    // Until subscription tables are introduced in Prisma schema,
+    // apply a conservative default threshold to protect infrastructure.
+    return activeProcesses < 1000;
   }
 }
