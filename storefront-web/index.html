@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CommerceFlow Fashion</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-chip" id="brand-name-chip">CommerceFlow</span>
+        <strong id="brand-subtitle">Fashion Commerce Suite</strong>
+      </div>
+      <nav class="menu">
+        <a href="#home">Home</a>
+        <a href="#store">Store</a>
+        <a href="#highlights">Highlights</a>
+        <a href="#about">About</a>
+        <button id="open-admin" class="btn btn-ghost" type="button">Employer Panel</button>
+        <button id="open-login" class="btn btn-primary" type="button">Login</button>
+        <button id="logout" class="btn btn-ghost hidden" type="button">Logout</button>
+      </nav>
+    </header>
+
+    <section id="home" class="hero">
+      <div>
+        <p class="hero-tag" id="hero-tag">Ready for white-label growth</p>
+        <h1 id="hero-headline">Create a store your customers love and your company can operate with confidence.</h1>
+        <p id="hero-description">
+          This storefront combines buyer experience, employer controls, checkout orchestration, and security-ready access flow.
+        </p>
+        <div class="hero-actions">
+          <a href="#store" class="btn btn-primary" id="hero-cta">Shop now</a>
+          <span id="session-chip" class="session-chip">Guest mode</span>
+        </div>
+      </div>
+      <img
+        src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=80"
+        alt="Fashion storefront"
+      />
+    </section>
+
+    <main id="store" class="page-grid">
+      <section>
+        <div class="section-top">
+          <h2>Store</h2>
+          <div class="filters">
+            <input id="search-input" type="text" placeholder="Search products" />
+            <select id="category-filter" aria-label="Filter by category">
+              <option value="all">All categories</option>
+            </select>
+          </div>
+        </div>
+        <div id="catalog" class="catalog"></div>
+      </section>
+
+      <aside class="checkout">
+        <h2>Checkout</h2>
+        <div class="kpis">
+          <div><span>Items</span><strong id="kpi-items">0</strong></div>
+          <div><span>Products</span><strong id="kpi-products">0</strong></div>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="summary">
+          <div><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
+          <div><span>Shipping</span><strong id="shipping">$0.00</strong></div>
+          <div><span>Tax</span><strong id="tax">$0.00</strong></div>
+          <div class="total"><span>Total</span><strong id="total">$0.00</strong></div>
+        </div>
+
+        <label for="api-base">Backend API base</label>
+        <input id="api-base" type="text" placeholder="http://localhost:3000" />
+
+        <label for="jwt-token">JWT token</label>
+        <textarea id="jwt-token" rows="3" placeholder="Bearer token"></textarea>
+
+        <button id="checkout" class="btn btn-primary" type="button">Pay now</button>
+        <p id="checkout-result" class="checkout-result"></p>
+      </aside>
+    </main>
+
+    <section id="highlights" class="highlights">
+      <h2>Business highlights</h2>
+      <div id="highlight-list" class="highlight-list"></div>
+    </section>
+
+    <section id="about" class="about">
+      <h2 id="about-title">Why companies use this template</h2>
+      <p id="about-text">
+        Built for repeatability: storefront UX + employer operations + secure session flow. Ideal for cloning per client and scaling.
+      </p>
+    </section>
+
+    <section id="admin-panel" class="admin-overlay hidden" aria-hidden="true">
+      <div class="admin-card">
+        <div class="admin-head">
+          <h2>Employer panel</h2>
+          <button id="close-admin" class="btn btn-ghost" type="button">Close</button>
+        </div>
+        <p class="admin-help">Create products, edit existing entries, or reset the demo catalog.</p>
+
+        <form id="product-form" class="product-form">
+          <input name="id" id="product-id" type="hidden" />
+          <input name="name" placeholder="Product name" required />
+          <input name="category" placeholder="Category" required />
+          <input name="badge" placeholder="Badge" />
+          <input name="price" type="number" min="0" step="0.01" placeholder="Price" required />
+          <input name="image" placeholder="Image URL" required />
+          <textarea name="description" rows="2" placeholder="Description" required></textarea>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="save-product">Save product</button>
+            <button type="button" class="btn btn-ghost" id="clear-product-form">Clear</button>
+          </div>
+        </form>
+
+        <div class="admin-actions">
+          <button id="reset-catalog" class="btn btn-danger" type="button">Reset catalog</button>
+        </div>
+
+        <div id="admin-list" class="admin-list"></div>
+      </div>
+    </section>
+
+    <section id="login-modal" class="admin-overlay hidden" aria-hidden="true">
+      <div class="admin-card login-card">
+        <div class="admin-head">
+          <h2>Secure login</h2>
+          <button id="close-login" class="btn btn-ghost" type="button">Close</button>
+        </div>
+        <p class="admin-help">Use your company account. For demo: role <strong>employer</strong> enables panel access.</p>
+        <form id="login-form" class="product-form">
+          <input name="email" type="email" placeholder="work@email.com" required />
+          <input name="password" type="password" placeholder="Password" required minlength="8" />
+          <select name="role" required>
+            <option value="customer">Customer</option>
+            <option value="employer">Employer</option>
+          </select>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </section>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

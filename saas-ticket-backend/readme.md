@@ -251,3 +251,20 @@ Please follow the project code style and naming conventions.
 # License
 This project is licensed under the MIT License — see the LICENSE file for details.
 © 2026 Benjamin Millalonco
+
+
+## Production env (Supabase-ready)
+
+1. Copy `.env.example` to `.env`.
+2. Set `DATABASE_URL` with your Supabase Postgres URL (`sslmode=require`).
+3. Generate a strong `JWT_SECRET` (32+ chars).
+4. Configure `CORS_ORIGIN` with your frontend domains.
+
+Quick start:
+
+```bash
+cp .env.example .env
+npm run prisma:generate
+npm run build
+npm run dev
+```

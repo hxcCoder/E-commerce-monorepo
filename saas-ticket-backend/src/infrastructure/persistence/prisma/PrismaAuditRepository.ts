@@ -11,21 +11,21 @@ export class PrismaAuditRepository implements AuditRepository {
       for (const event of events) {
         const primitives = event.toPrimitives();
 
-        await this.prisma.auditLog.create({
+        await this.prisma.outbox.create({
           data: {
-            eventId: event.eventId, // ✅ FIX
-            eventName: event.getEventName(),
-            eventData: primitives as Prisma.InputJsonValue,
+            id: event.eventId,
+            eventName: `audit.${event.getEventName()}`,
             payload: primitives as Prisma.InputJsonValue,
             occurredOn: event.occurredOn,
+            published: false,
           },
         });
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        throw new Error(`Failed to save events: ${error.message}`);
+        throw new Error(`Failed to save audit events: ${error.message}`);
       }
-      throw new Error("Failed to save events");
+      throw new Error("Failed to save audit events");
     }
   }
 }

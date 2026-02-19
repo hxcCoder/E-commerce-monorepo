@@ -9,8 +9,17 @@ export class InMemoryOrderRepository implements OrderRepository {
     }
 
     async save(order: Order): Promise<void> {
-        // En un fake simple no hacemos nada aquí
-        // El test controla cuándo se inserta
+        const key = this.findExistingKey(order) ?? `order-${this.orders.size + 1}`;
+        this.orders.set(key, order);
+    }
+
+    private findExistingKey(order: Order): string | null {
+        for (const [id, stored] of this.orders.entries()) {
+            if (stored === order) {
+                return id;
+            }
+        }
+        return null;
     }
 
     // ===== Helpers SOLO para tests =====

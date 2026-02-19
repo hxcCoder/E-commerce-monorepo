@@ -4,7 +4,7 @@ import { ProcessStatus } from "../../ProcessStatus";
 
 describe("Process.activate", () => {
     it("activates a process with steps", () => {
-        const process = Process.create("p-1", "My process");
+        const process = Process.create("p-1", "My process", "org-1");
 
         const step = new ProcessStep({
             id: "s-1",

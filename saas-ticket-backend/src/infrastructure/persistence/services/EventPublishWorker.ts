@@ -1,11 +1,11 @@
-// src/application/use-cases/ports/EventPublisherWorker.ts
-import { OutboxRepository } from "../prisma/PrismaOutboxRepository";
+import { OutboxRepository } from "../../../application/use-cases/ports/OutBoxRepository";
 
 export class EventPublisherWorker {
   constructor(private readonly outboxRepo: OutboxRepository) {}
 
-  async publishPending() {
+  async publishPending(): Promise<void> {
     const events = await this.outboxRepo.findPending();
+
     for (const event of events) {
       try {
         console.log("Publicando evento:", event.eventName, event.payload);
@@ -16,4 +16,3 @@ export class EventPublisherWorker {
     }
   }
 }
-    
