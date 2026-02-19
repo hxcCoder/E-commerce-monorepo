@@ -1,14 +1,14 @@
 # Production Blueprint: CommerceFlow + SaaS Ticket Backend
 
-Este documento es una guía de trabajo **senior** para construir una base segura, mantenible y escalable en este monorepo.
+Este documento es una guía de trabajo enfocado para construir una base segura, mantenible y escalable en este monorepo.
 
 ## 1) Objetivo de arquitectura
 
 Construir un sistema donde:
 
-- **CommerceFlow** gobierna el flujo de ventas (orden, pago, cumplimiento).
-- **SaaS Ticket Backend** gobierna procesos internos y compliance (auditoría, validación, trazabilidad).
-- Ambos se conectan por contratos explícitos, con eventos versionados y observabilidad fuerte.
+- **CommerceFlow**|-- gobierna el flujo de ventas (orden, pago, cumplimiento).
+- **SaaS Ticket Backend** |-- gobierna procesos internos y compliance (auditoría, validación, trazabilidad).
+Ambos se conectan por contratos explícitos, con eventos versionados y observabilidad fuerte.
 
 Principio rector: **el dominio manda y la infraestructura obedece**.
 
@@ -252,7 +252,7 @@ No al 100%. Lo importante es:
 - tener mapas/documentación del resto,
 - poder diagnosticar rápido lo desconocido.
 
-La excelencia backend no es “saber todo”; es **reducir incertidumbre operacional**.
+**reducir incertidumbre operacional**.
 
 ### 12.3 ¿Es normal tener fallos?
 Sí, totalmente normal. Lo profesional es:
@@ -261,12 +261,10 @@ Sí, totalmente normal. Lo profesional es:
 - recuperar sin corrupción de datos,
 - aprender y cerrar la brecha para que no se repita.
 
-### 12.4 Tu enfoque de “templo fuerte y sellado” (versión práctica)
+### 12.4 enfoque de “templo fuerte y sellado” (versión práctica)
 Tradúcelo a controles concretos:
 - Seguridad: RBAC, least privilege, secretos rotados, validación fuerte.
 - Integridad: invariantes de dominio + idempotencia + transacciones.
 - Resiliencia: retries, timeouts, circuit breakers, DLQ.
 - Observabilidad: logs estructurados, métricas y trazas con correlación.
 - Operación: runbooks, alertas accionables y postmortems sin culpa.
-
-Si ejecutas esto de forma disciplinada, vas por camino de senior real.
