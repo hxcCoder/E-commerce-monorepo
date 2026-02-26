@@ -663,4 +663,3 @@ Este proyecto está bajo licencia MIT. Ver [LICENCE](./saas-ticket-backend/LICEN
 - [x] Migrations de base de datos
 - [x] CI/CD ready
 
-🎉 **¡Sistema listo para ir a producción!**
