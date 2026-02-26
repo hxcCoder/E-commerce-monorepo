@@ -1,7 +1,9 @@
 import { PrismaUnitOfWork } from "../PrismaUnitOfWork";
 import { PrismaExecutionRepository } from "../PrismaExecutionRepository";
-import { ExecutionFactory } from "../../../../application/use-cases/test/fakes/ExecutionFactory";
 import { getPrismaClient } from "../PrismaClient";
+
+import { Execution } from "../../../../domain/entities/execution/Execution";
+import { ExecutionStep, ExecutionStepStatus } from "../../../../domain/entities/execution/ExecutionStep";
 
 if (!process.env.DATABASE_URL) {
   describe.skip("Execution Repository Integration", () => {
@@ -24,16 +26,73 @@ if (!process.env.DATABASE_URL) {
     beforeAll(async () => {
       await prisma.executionStep.deleteMany({});
       await prisma.execution.deleteMany({});
+      await prisma.processStep.deleteMany({});
+      await prisma.process.deleteMany({});
+      await prisma.organization.deleteMany({});
+
+      await prisma.organization.create({
+        data: {
+          id: "org1",
+          name: "Test Org",
+          status: "ACTIVE",
+          plan: "BASIC",
+        },
+      });
+
+      await prisma.process.create({
+        data: {
+          id: "process1",
+          name: "Test Process",
+          organizationId: "org1",
+          status: "DRAFT",
+        },
+      });
+
+      await prisma.processStep.create({
+        data: {
+          id: "step1",
+          processId: "process1",
+          name: "Step 1",
+          order: 1,
+        },
+      });
+
+      await prisma.processStep.create({
+        data: {
+          id: "step2",
+          processId: "process1",
+          name: "Step 2",
+          order: 2,
+        },
+      });
     });
 
     it("should save and retrieve an execution", async () => {
-      const execution = ExecutionFactory.createExecution();
-      await uow.run(async () => repo.save(execution));
+      const execution = Execution.createForTest(
+        "exec1",
+        "process1",
+        [
+          ExecutionStep.rehydrate({
+            stepId: "step1",
+            status: ExecutionStepStatus.PENDING,
+          }),
+          ExecutionStep.rehydrate({
+            stepId: "step2",
+            status: ExecutionStepStatus.PENDING,
+          }),
+        ]
+      );
 
-      const loaded = await repo.findById(execution.getId());
+      await uow.run(async () => {
+        await repo.save(execution);
+      });
+
+      const loaded = await repo.findById("exec1");
+
       expect(loaded).not.toBeNull();
-      expect(loaded!.getId()).toBe(execution.getId());
-      expect(loaded!.getSteps().length).toBe(execution.getSteps().length);
+      expect(loaded!.getId()).toBe("exec1");
+      expect(loaded!.getProcessId()).toBe("process1");
+      expect(loaded!.getSteps().length).toBe(2);
     });
   });
 }
