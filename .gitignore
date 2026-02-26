@@ -1,42 +1,42 @@
-# === Node / TypeScript ===
+# Node
 node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build
 dist/
 build/
-coverage/
-*.log
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
+out/
 
-# === TypeScript ===
-*.tsbuildinfo
-
-# === Environment ===
+# Env
 .env
-.env.*
-!.env.example
+.env.local
+.env.*.local
 
-# === Prisma ===
-prisma/dev.db
-prisma/*.db
-prisma/migrations/
+# Logs
+logs/
+*.log
 
-# === OS ===
+# OS
 .DS_Store
 Thumbs.db
 
-# === IDEs ===
+# Editor
 .vscode/
 .idea/
 
-# === Tests ===
-*.spec.ts
-*.test.ts
+# Coverage / tests
+coverage/
 
-# === Temp ===
-tmp/
-temp/
+# Prisma
+generated/
+prisma/migrations/
 
-# === Monorepo tooling (futuro) ===
-.turbo/
-.nx/
+# TS
+*.tsbuildinfo
+
+# Jest
+jest-cache/
+
+# Git
+.git/

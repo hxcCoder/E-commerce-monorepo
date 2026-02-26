@@ -201,6 +201,7 @@ Para incidentes de producción:
 
 Si haces esto bien, ya estarás construyendo con mentalidad de producción real.
 
+
 Checklist ejecutable de cierre V1: `V1_RELEASE_CHECKLIST.md`.
 
 
