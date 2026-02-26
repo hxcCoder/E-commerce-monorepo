@@ -19,12 +19,12 @@
 
 **EcomFlow** es un sistema de e-commerce moderno, escalable y completo con:
 
-✅ **Gestión de Órdenes**: Entidad de orden con ciclo de vida completo (CREATED → PAYMENT_PENDING → PAID → FULFILLED)
-✅ **Automatización de Procesos**: Motor de ejecución de procesos para automatizar workflows
-✅ **Tienda Frontend**: Interfaz moderna para compra de productos y gestión de carrito
-✅ **Sistema de Auditoría**: Logs estructurados con correlation IDs para trazabilidad
-✅ **Seguridad**: JWT, validación con Zod, escapado de HTML, RBAC
-✅ **Escalabilidad**: Arquitectura por capas (Dominio → Aplicación → Infraestructura)
+- ✅ **Gestión de Órdenes**: Entidad de orden con ciclo de vida completo (CREATED → PAYMENT_PENDING → PAID → FULFILLED)
+- ✅ **Automatización de Procesos**: Motor de ejecución de procesos para automatizar workflows
+- ✅ **Tienda Frontend**: Interfaz moderna para compra de productos y gestión de carrito
+- ✅ **Sistema de Auditoría**: Logs estructurados con correlation IDs para trazabilidad
+- ✅ **Seguridad**: JWT, validación con Zod, escapado de HTML, RBAC
+- ✅ **Escalabilidad**: Arquitectura por capas (Dominio → Aplicación → Infraestructura)
 
 ---
 
