@@ -8,41 +8,62 @@ export enum ExecutionStepStatus {
 
 export class ExecutionStep {
   private readonly stepId: string;
+  private readonly nameSnapshot: string;
+  private readonly orderSnapshot: number;
+  private readonly configSnapshot?: any;
   private status: ExecutionStepStatus;
+  private completedAt?: Date;
 
-  private constructor(stepId: string, status?: ExecutionStepStatus) {
-    this.stepId = stepId;
-    this.status = status ?? ExecutionStepStatus.PENDING;
+  private constructor(params: {
+    stepId: string;
+    nameSnapshot: string;
+    orderSnapshot: number;
+    configSnapshot?: any;
+    status?: ExecutionStepStatus;
+    completedAt?: Date;
+  }) {
+    this.stepId = params.stepId;
+    this.nameSnapshot = params.nameSnapshot;
+    this.orderSnapshot = params.orderSnapshot;
+    this.configSnapshot = params.configSnapshot;
+    this.status = params.status ?? ExecutionStepStatus.PENDING;
+    this.completedAt = params.completedAt;
   }
 
   static fromProcessStep(step: ProcessStep): ExecutionStep {
-    return new ExecutionStep(step.getId());
+    return new ExecutionStep({
+      stepId: step.getId(),
+      nameSnapshot: step.getName(),
+      orderSnapshot: step.getOrder(),
+      configSnapshot: step.getConfig(),
+    });
   }
 
   static rehydrate(params: {
     stepId: string;
+    nameSnapshot: string;
+    orderSnapshot: number;
+    configSnapshot?: any;
     status: ExecutionStepStatus;
+    completedAt?: Date;
   }): ExecutionStep {
-    if (!Object.values(ExecutionStepStatus).includes(params.status)) {
-      throw new Error("Invalid ExecutionStepStatus during rehydration");
-    }
-    return new ExecutionStep(params.stepId, params.status);
+    return new ExecutionStep(params);
   }
 
   markDone(): void {
     if (this.status !== ExecutionStepStatus.PENDING) return;
     this.status = ExecutionStepStatus.DONE;
+    this.completedAt = new Date();
   }
 
   isDone(): boolean {
     return this.status === ExecutionStepStatus.DONE;
   }
 
-  getStepId(): string {
-    return this.stepId;
-  }
-
-  getStatus(): ExecutionStepStatus {
-    return this.status;
-  }
+  getStepId(): string { return this.stepId; }
+  getStatus(): ExecutionStepStatus { return this.status; }
+  getNameSnapshot(): string { return this.nameSnapshot; }
+  getOrderSnapshot(): number { return this.orderSnapshot; }
+  getConfigSnapshot(): any { return this.configSnapshot; }
+  getCompletedAt(): Date | undefined { return this.completedAt; }
 }

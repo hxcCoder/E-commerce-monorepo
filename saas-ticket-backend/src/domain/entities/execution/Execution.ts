@@ -1,7 +1,6 @@
-// src/domain/entities/execution/Execution.ts
 import { Process } from "../process/Process";
 import { ExecutionStatus } from "./ExecutionStatus";
-import { ExecutionStep, ExecutionStepStatus } from "./ExecutionStep";
+import { ExecutionStep } from "./ExecutionStep";
 import { DomainEvent } from "../audit/shared/DomainEvent";
 import { ExecutionStarted } from "./events/ExecutionStarted";
 import { ExecutionStepCompleted } from "./events/ExecutionStepCompleted";
@@ -10,6 +9,7 @@ import { InvalidProcessStateError } from "../process/ProcessErrors";
 
 export class Execution {
   private domainEvents: DomainEvent[] = [];
+  private finishedAt?: Date;
 
   private constructor(
     private readonly id: string,
@@ -18,8 +18,6 @@ export class Execution {
     private steps: ExecutionStep[],
     recordEvent: boolean
   ) {
-    Execution.validateState(status, steps);
-
     if (recordEvent) {
       this.record(new ExecutionStarted(this.id, this.processId));
     }
@@ -27,16 +25,12 @@ export class Execution {
 
   static start(id: string, process: Process): Execution {
     if (!process.isActive()) {
-      throw new InvalidProcessStateError("Cannot execute an inactive process");
+      throw new InvalidProcessStateError("Cannot execute inactive process");
     }
 
-    const steps = process
-      .getSteps()
-      .map(step => ExecutionStep.fromProcessStep(step));
-
-    if (steps.length === 0) {
-      throw new Error("Execution must contain at least one step");
-    }
+    const steps = process.getSteps().map(s =>
+      ExecutionStep.fromProcessStep(s)
+    );
 
     return new Execution(
       id,
@@ -51,45 +45,40 @@ export class Execution {
     id: string;
     processId: string;
     status: ExecutionStatus;
+    finishedAt?: Date;
     steps: ExecutionStep[];
   }): Execution {
-    Execution.validateState(params.status, params.steps);
-
-    const unique = new Set(params.steps.map(s => s.getStepId()));
-    if (unique.size !== params.steps.length) {
-      throw new Error("Duplicate execution steps detected");
-    }
-
-    return new Execution(
+    const execution = new Execution(
       params.id,
       params.processId,
       params.status,
       params.steps,
       false
     );
+    execution.finishedAt = params.finishedAt;
+    return execution;
   }
 
   markStepDone(stepId: string): void {
     if (this.status !== ExecutionStatus.RUNNING) {
-      throw new Error("Cannot update steps when execution is not running");
+      throw new Error("Execution not running");
     }
 
     const step = this.steps.find(s => s.getStepId() === stepId);
-    if (!step) throw new Error("Execution step not found");
-
-    if (step.isDone()) return;
+    if (!step) throw new Error("Step not found");
 
     step.markDone();
     this.record(new ExecutionStepCompleted(this.id, stepId));
 
     if (this.steps.every(s => s.isDone())) {
       this.status = ExecutionStatus.COMPLETED;
+      this.finishedAt = new Date();
       this.record(new ExecutionCompleted(this.id));
     }
   }
 
   pullDomainEvents(): DomainEvent[] {
-    const events = this.domainEvents;
+    const events = [...this.domainEvents];
     this.domainEvents = [];
     return events;
   }
@@ -102,36 +91,5 @@ export class Execution {
   getProcessId(): string { return this.processId; }
   getStatus(): ExecutionStatus { return this.status; }
   getSteps(): ExecutionStep[] { return [...this.steps]; }
-
-  isStepCompleted(stepId: string): boolean {
-    const step = this.steps.find(s => s.getStepId() === stepId);
-    return step?.isDone() ?? false;
-  }
-
-  private static validateState(
-    status: ExecutionStatus,
-    steps: ExecutionStep[]
-  ): void {
-    if (!Object.values(ExecutionStatus).includes(status)) {
-      throw new Error("Invalid ExecutionStatus");
-    }
-
-    if (!Array.isArray(steps)) {
-      throw new Error("Steps must be an array");
-    }
-  }
-
-  static createForTest(
-    id: string,
-    processId: string,
-    steps: ExecutionStep[] = []
-  ): Execution {
-    return new Execution(
-      id,
-      processId,
-      ExecutionStatus.RUNNING,
-      steps,
-      false
-    );
-  }
+  getFinishedAt(): Date | undefined { return this.finishedAt; }
 }

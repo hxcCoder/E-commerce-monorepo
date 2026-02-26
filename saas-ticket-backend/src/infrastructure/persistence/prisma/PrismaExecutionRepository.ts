@@ -1,4 +1,3 @@
-// src/infrastructure/persistence/prisma/PrismaExecutionRepository.ts
 import { PrismaClient, StepStatus } from "../../../generated/prisma";
 import { getPrismaClient } from "./PrismaClient";
 import { ExecutionRepository } from "../../../application/use-cases/ports/ExecutionRepository";
@@ -8,21 +7,6 @@ import { ExecutionStep } from "../../../domain/entities/execution/ExecutionStep"
 import { ExecutionStatus } from "../../../domain/entities/execution/ExecutionStatus";
 import { ExecutionStepStatus } from "../../../domain/entities/execution/ExecutionStep";
 import { toJsonValue } from "./Json";
-
-type DbExecutionStep = {
-  stepId: string;
-  status: string;
-};
-
-type DbExecution = {
-  id: string;
-  processId: string;
-  status: string;
-  steps: DbExecutionStep[];
-};
-
-const toPrismaStepStatus = (status: ExecutionStepStatus): StepStatus =>
-  status as unknown as StepStatus;
 
 export class PrismaExecutionRepository implements ExecutionRepository {
   private prisma: PrismaClient = getPrismaClient();
@@ -35,11 +19,15 @@ export class PrismaExecutionRepository implements ExecutionRepository {
     await this.prisma.$transaction(async tx => {
       await tx.execution.upsert({
         where: { id: execution.getId() },
-        update: { status: execution.getStatus() as ExecutionStatus },
+        update: {
+          status: execution.getStatus(),
+          finishedAt: execution.getFinishedAt(),
+        },
         create: {
           id: execution.getId(),
           processId: execution.getProcessId(),
-          status: execution.getStatus() as ExecutionStatus,
+          status: execution.getStatus(),
+          finishedAt: execution.getFinishedAt(),
         },
       });
 
@@ -51,11 +39,18 @@ export class PrismaExecutionRepository implements ExecutionRepository {
               stepId: step.getStepId(),
             },
           },
-          update: { status: toPrismaStepStatus(step.getStatus()) },
+          update: {
+            status: step.getStatus() as unknown as StepStatus,
+            completedAt: step.getCompletedAt(),
+          },
           create: {
             executionId: execution.getId(),
             stepId: step.getStepId(),
-            status: toPrismaStepStatus(step.getStatus()),
+            nameSnapshot: step.getNameSnapshot(),
+            orderSnapshot: step.getOrderSnapshot(),
+            configSnapshot: toJsonValue(step.getConfigSnapshot()),
+            status: step.getStatus() as unknown as StepStatus,
+            completedAt: step.getCompletedAt(),
           },
         });
       }
@@ -77,17 +72,22 @@ export class PrismaExecutionRepository implements ExecutionRepository {
       where: { id },
       include: { steps: true },
     });
+
     if (!row) return null;
 
-    const dbRow = row as unknown as DbExecution;
     return Execution.rehydrate({
-      id: dbRow.id,
-      processId: dbRow.processId,
-      status: dbRow.status as ExecutionStatus,
-      steps: dbRow.steps.map(step =>
+      id: row.id,
+      processId: row.processId,
+      status: row.status as ExecutionStatus,
+      finishedAt: row.finishedAt ?? undefined,
+      steps: row.steps.map(step =>
         ExecutionStep.rehydrate({
           stepId: step.stepId,
+          nameSnapshot: step.nameSnapshot,
+          orderSnapshot: step.orderSnapshot,
+          configSnapshot: step.configSnapshot,
           status: step.status as ExecutionStepStatus,
+          completedAt: step.completedAt ?? undefined,
         })
       ),
     });
