@@ -36,8 +36,9 @@ export class Process {
     id: string,
     name: string,
     organizationId: string,
-    version: number
+    version: number = 1
   ): Process {
+    // new processes start at version 1 by default; callers may override for rehydration
     return new Process(id, name, organizationId, version);
   }
 

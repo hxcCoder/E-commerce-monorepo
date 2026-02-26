@@ -1,103 +1,343 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CommerceFlow Fashion</title>
+    <meta name="description" content="CommerceFlow - Plataforma de e-commerce moderna, segura y escalable" />
+    <meta name="theme-color" content="#6366f1" />
+    <title>CommerceFlow - Tu tienda online profesional</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
   </head>
   <body>
-    <header class="site-header">
-      <div class="brand">
-        <span class="brand-chip" id="brand-name-chip">CommerceFlow</span>
-        <strong id="brand-subtitle">Fashion Commerce Suite</strong>
-      </div>
-      <nav class="menu">
-        <a href="#home">Home</a>
-        <a href="#store">Store</a>
-        <a href="#highlights">Highlights</a>
-        <a href="#about">About</a>
-        <button id="open-admin" class="btn btn-ghost" type="button">Employer Panel</button>
-        <button id="open-login" class="btn btn-primary" type="button">Login</button>
-        <button id="logout" class="btn btn-ghost hidden" type="button">Logout</button>
-      </nav>
-    </header>
-
-    <section id="home" class="hero">
-      <div>
-        <p class="hero-tag" id="hero-tag">Ready for white-label growth</p>
-        <h1 id="hero-headline">Create a store your customers love and your company can operate with confidence.</h1>
-        <p id="hero-description">
-          This storefront combines buyer experience, employer controls, checkout orchestration, and security-ready access flow.
-        </p>
-        <div class="hero-actions">
-          <a href="#store" class="btn btn-primary" id="hero-cta">Shop now</a>
-          <span id="session-chip" class="session-chip">Guest mode</span>
-        </div>
-      </div>
-      <img
-        src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=80"
-        alt="Fashion storefront"
-      />
-    </section>
-
-    <main id="store" class="page-grid">
-      <section>
-        <div class="section-top">
-          <h2>Store</h2>
-          <div class="filters">
-            <input id="search-input" type="text" placeholder="Search products" />
-            <select id="category-filter" aria-label="Filter by category">
-              <option value="all">All categories</option>
-            </select>
+    <!-- NAVIGATION HEADER -->
+    <header class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-brand">
+          <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+              <path d="M16 2l11 6v16l-11 6-11-6V8l11-6zm0 4l-7 4v9l7 4 7-4v-9l-7-4z"/>
+            </svg>
+            <span>CommerceFlow</span>
           </div>
         </div>
-        <div id="catalog" class="catalog"></div>
+        <nav class="navbar-menu">
+          <a href="#home" class="nav-link">Inicio</a>
+          <a href="#products" class="nav-link">Productos</a>
+          <a href="#features" class="nav-link">Características</a>
+          <a href="#contact" class="nav-link">Contacto</a>
+        </nav>
+        <div class="navbar-actions">
+          <button class="btn-header-cart" id="cart-toggle" aria-label="Carrito de compras">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span id="cart-count" class="cart-badge">0</span>
+          </button>
+          <button id="btn-login" class="btn btn-primary-nav">Ingresar</button>
+          <button id="btn-logout" class="btn btn-ghost-nav hidden">Salir</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Tu tienda en línea profesional</h1>
+          <p>Plataforma e-commerce moderna con pagos seguros, inventario en tiempo real y análisis avanzados</p>
+          <div class="hero-buttons">
+            <a href="#products" class="btn btn-primary">Explorar catálogo</a>
+            <a href="#features" class="btn btn-secondary">Saber más</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=600&q=80" alt="Tienda de moda" />
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-container">
+      <!-- SHOPPING SECTION -->
+      <section id="products" class="products-section">
+        <div class="section-header">
+          <h2>Catálogo de productos</h2>
+          <p>Descubre nuestra selección curada de productos de calidad premium</p>
+        </div>
+
+        <div class="products-controls">
+          <input 
+            id="search-box" 
+            type="text" 
+            placeholder="Buscar por nombre, categoría..." 
+            class="search-input"
+            autocomplete="off"
+          />
+          <select id="category-select" class="filter-select">
+            <option value="all">Todas las categorías</option>
+          </select>
+          <button id="admin-btn" class="btn btn-secondary hidden">Panel de admin</button>
+        </div>
+
+        <div id="products-grid" class="products-grid">
+          <!-- Productos se cargan dinámicamente aquí -->
+        </div>
       </section>
 
-      <aside class="checkout">
-        <h2>Checkout</h2>
-        <div class="kpis">
-          <div><span>Items</span><strong id="kpi-items">0</strong></div>
-          <div><span>Products</span><strong id="kpi-products">0</strong></div>
+      <!-- FEATURES SECTION -->
+      <section id="features" class="features-section">
+        <div class="section-header">
+          <h2>¿Por qué elegir CommerceFlow?</h2>
+          <p>Una plataforma diseñada para crecer con tu negocio</p>
         </div>
-        <div id="cart-items" class="cart-items"></div>
-        <div class="summary">
-          <div><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
-          <div><span>Shipping</span><strong id="shipping">$0.00</strong></div>
-          <div><span>Tax</span><strong id="tax">$0.00</strong></div>
-          <div class="total"><span>Total</span><strong id="total">$0.00</strong></div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Seguridad empresarial</h3>
+            <p>Cumplimiento de normas internacionales con encriptación de datos y auditorías constantes</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Alto rendimiento</h3>
+            <p>Infraestructura optimizada para manejar miles de transacciones por minuto</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Analítica avanzada</h3>
+            <p>Reportes en tiempo real y dashboards personalizables para tomar decisiones informadas</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🌍</div>
+            <h3>Global ready</h3>
+            <p>Soporte multimoneda, múltiples idiomas y cumplimiento de regulaciones internacionales</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3>Integración fácil</h3>
+            <p>APIs modernas que se integran con tus sistemas existentes en minutos</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>Mobile first</h3>
+            <p>Experiencia perfecta en todos los dispositivos, optimizada para conversión</p>
+          </div>
         </div>
+      </section>
 
-        <label for="api-base">Backend API base</label>
-        <input id="api-base" type="text" placeholder="http://localhost:3000" />
-
-        <label for="jwt-token">JWT token</label>
-        <textarea id="jwt-token" rows="3" placeholder="Bearer token"></textarea>
-
-        <button id="checkout" class="btn btn-primary" type="button">Pay now</button>
-        <p id="checkout-result" class="checkout-result"></p>
-      </aside>
+      <!-- CONTACT SECTION -->
+      <section id="contact" class="contact-section">
+        <div class="section-header">
+          <h2>¿Listo para comenzar?</h2>
+          <p>Contacta con nuestro equipo o inicia tu prueba gratuita hoy</p>
+        </div>
+        <div class="contact-content">
+          <form id="contact-form" class="contact-form">
+            <input type="email" placeholder="Tu correo electrónico" required />
+            <input type="text" placeholder="Nombre completo" required />
+            <textarea placeholder="Cuéntanos sobre tu negocio" rows="4" required></textarea>
+            <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+          </form>
+          <div class="contact-info">
+            <div class="info-item">
+              <strong>📧 Email</strong>
+              <p>hola@commerceflow.io</p>
+            </div>
+            <div class="info-item">
+              <strong>🌐 Web</strong>
+              <p>www.commerceflow.io</p>
+            </div>
+            <div class="info-item">
+              <strong>💬 Chat</strong>
+              <p>Disponible 24/7 en vivo</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <section id="highlights" class="highlights">
-      <h2>Business highlights</h2>
-      <div id="highlight-list" class="highlight-list"></div>
-    </section>
-
-    <section id="about" class="about">
-      <h2 id="about-title">Why companies use this template</h2>
-      <p id="about-text">
-        Built for repeatability: storefront UX + employer operations + secure session flow. Ideal for cloning per client and scaling.
-      </p>
-    </section>
-
-    <section id="admin-panel" class="admin-overlay hidden" aria-hidden="true">
-      <div class="admin-card">
-        <div class="admin-head">
-          <h2>Employer panel</h2>
-          <button id="close-admin" class="btn btn-ghost" type="button">Close</button>
+    <!-- CART SIDEBAR -->
+    <aside id="cart-sidebar" class="cart-sidebar closed">
+      <div class="cart-header">
+        <h2>Tu carrito</h2>
+        <button id="close-cart" class="btn-close" aria-label="Cerrar carrito">×</button>
+      </div>
+      <div id="cart-items-list" class="cart-items-list">
+        <p class="empty-cart">Tu carrito está vacío</p>
+      </div>
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="summary-subtotal">$0.00</span>
         </div>
+        <div class="summary-row">
+          <span>Impuesto (12%)</span>
+          <span id="summary-tax">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Envío</span>
+          <span id="summary-shipping">$0.00</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>Total</span>
+          <span id="summary-total">$0.00</span>
+        </div>
+      </div>
+      <div class="cart-checkout">
+        <input 
+          id="api-endpoint" 
+          type="text" 
+          placeholder="API backend (ej: http://localhost:3000)" 
+          class="checkout-input"
+        />
+        <textarea 
+          id="jwt-token-input" 
+          placeholder="Token JWT (opcional para demo)" 
+          rows="3" 
+          class="checkout-input"
+        ></textarea>
+        <button id="checkout-btn" class="btn btn-primary full-width" disabled>Procesar pago</button>
+        <p id="checkout-message" class="checkout-message"></p>
+      </div>
+    </aside>
+
+    <!-- OVERLAY -->
+    <div id="overlay" class="overlay hidden"></div>
+
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Ingresa a tu cuenta</h2>
+          <button id="close-login" class="btn-close">×</button>
+        </div>
+        <form id="login-form" class="form-login">
+          <input type="email" placeholder="Correo" required />
+          <input type="password" placeholder="Contraseña (mín. 8 caracteres)" minlength="8" required />
+          <select required>
+            <option value="">Selecciona tu rol</option>
+            <option value="customer">Cliente</option>
+            <option value="employer">Administrador</option>
+          </select>
+          <button type="submit" class="btn btn-primary full-width">Ingresar</button>
+          <p class="form-help">Demo: usa cualquier email/contraseña para el rol seleccionado</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL MODAL -->
+    <div id="admin-modal" class="modal hidden">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2>Panel de administración</h2>
+          <button id="close-admin" class="btn-close">×</button>
+        </div>
+
+        <div class="admin-tabs">
+          <button class="tab-btn active" data-tab="products-tab">Productos</button>
+          <button class="tab-btn" data-tab="analytics-tab">Analíticas</button>
+        </div>
+
+        <!-- PRODUCTS TAB -->
+        <div id="products-tab" class="tab-content active">
+          <h3>Gestionar catálogo de productos</h3>
+          <form id="product-form" class="product-form">
+            <div class="form-row">
+              <input name="name" placeholder="Nombre del producto" required />
+              <input name="category" placeholder="Categoría" required />
+            </div>
+            <div class="form-row">
+              <input name="price" type="number" min="0.01" step="0.01" placeholder="Precio" required />
+              <input name="badge" placeholder="Etiqueta (ej: Nuevo)" />
+            </div>
+            <input name="image" type="url" placeholder="URL de la imagen" required />
+            <textarea name="description" placeholder="Descripción" rows="2" required></textarea>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar producto</button>
+              <button type="button" id="clear-form-btn" class="btn btn-secondary">Limpiar formulario</button>
+            </div>
+          </form>
+
+          <h3 style="margin-top: 2rem;">Productos actuales</h3>
+          <div id="products-admin-list" class="admin-table">
+            <!-- Productos se cargan aquí -->
+          </div>
+
+          <div class="admin-actions">
+            <button id="reset-catalog-btn" class="btn btn-danger">Restaurar catálogo por defecto</button>
+          </div>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div id="analytics-tab" class="tab-content">
+          <h3>Métricas de la tienda</h3>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" id="metric-total-orders">0</div>
+              <div class="metric-label">Órdenes totales</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="metric-total-revenue">$0.00</div>
+              <div class="metric-label">Ingresos totales</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="metric-avg-order">$0.00</div>
+              <div class="metric-label">Ticket promedio</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="metric-products">0</div>
+              <div class="metric-label">Productos activos</div>
+            </div>
+          </div>
+          <div style="margin-top: 2rem; height: 300px;">
+            <canvas id="sales-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>CommerceFlow</h4>
+          <p>Plataforma de e-commerce de nueva generación</p>
+        </div>
+        <div class="footer-section">
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="#">Características</a></li>
+            <li><a href="#">Precios</a></li>
+            <li><a href="#">Documentación</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Empresa</h4>
+          <ul>
+            <li><a href="#">Sobre nosotros</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Términos</a></li>
+            <li><a href="#">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 CommerceFlow. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
         <p class="admin-help">Create products, edit existing entries, or reset the demo catalog.</p>
 
         <form id="product-form" class="product-form">

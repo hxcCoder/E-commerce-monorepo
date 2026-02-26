@@ -48,7 +48,7 @@ export class PrismaExecutionRepository implements ExecutionRepository {
             stepId: step.getStepId(),
             nameSnapshot: step.getNameSnapshot(),
             orderSnapshot: step.getOrderSnapshot(),
-            configSnapshot: toJsonValue(step.getConfigSnapshot()),
+            configSnapshot: toJsonValue(step.getConfigSnapshot()) as any,
             status: step.getStatus() as unknown as StepStatus,
             completedAt: step.getCompletedAt(),
           },

@@ -23,6 +23,9 @@ app.use((req, res, next) => {
   const requestId = req.header('x-request-id') || randomUUID();
   res.setHeader('x-request-id', requestId);
   res.locals.requestId = requestId;
+  // attach a child logger so handlers can log with correlation
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (req as any).logger = logger.child({ correlationId: requestId });
   next();
 });
 

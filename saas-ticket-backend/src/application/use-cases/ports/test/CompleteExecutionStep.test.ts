@@ -16,7 +16,9 @@ describe('CompleteExecutionStep Use Case', () => {
     // 🔹 Creamos un step mock
     const stepMock: any = {
       getId: () => 'step1',
-      getName: () => 'Step 1'
+      getName: () => 'Step 1',
+      getOrder: () => 0,
+      getConfig: () => undefined,
     };
     const step = ExecutionStep.fromProcessStep(stepMock);
 

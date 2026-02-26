@@ -17,6 +17,7 @@ export class PrismaProcessRepository implements ProcessRepository {
       id: step.getId(),
       name: step.getName(),
       order: step.getOrder(),
+      config: (step as any).getConfig ? (step as any).getConfig() : undefined,
     }));
 
     await db.process.upsert({
@@ -24,6 +25,7 @@ export class PrismaProcessRepository implements ProcessRepository {
       update: {
         name: process.getName(),
         status: process.getStatus(),
+        version: process.getVersion(),
         steps: { deleteMany: {}, create: stepsData },
       },
       create: {
@@ -31,6 +33,7 @@ export class PrismaProcessRepository implements ProcessRepository {
         name: process.getName(),
         organizationId: process.getOrganizationId(),
         status: process.getStatus(),
+        version: process.getVersion(),
         steps: { create: stepsData },
       },
     });
@@ -47,11 +50,13 @@ export class PrismaProcessRepository implements ProcessRepository {
       id: data.id,
       name: data.name,
       organizationId: data.organizationId,
+      version: data.version,
       status: data.status as any,
       steps: data.steps.map((s: any) => ({
         id: s.id,
         name: s.name,
         order: s.order,
+        config: s.config,
       })),
     });
   }

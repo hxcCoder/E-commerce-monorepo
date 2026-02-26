@@ -41,6 +41,18 @@ export class Execution {
     );
   }
 
+  /**
+   * Helper used in tests to create an execution without going through the full
+   * domain logic. Keeps status RUNNING and skips event recording.
+   */
+  static createForTest(
+    id: string,
+    processId: string,
+    steps: ExecutionStep[]
+  ): Execution {
+    return new Execution(id, processId, ExecutionStatus.RUNNING, steps, false);
+  }
+
   static rehydrate(params: {
     id: string;
     processId: string;
@@ -75,6 +87,14 @@ export class Execution {
       this.finishedAt = new Date();
       this.record(new ExecutionCompleted(this.id));
     }
+  }
+
+  /**
+   * Convenience used in application tests.
+   */
+  isStepCompleted(stepId: string): boolean {
+    const step = this.steps.find(s => s.getStepId() === stepId);
+    return step ? step.isDone() : false;
   }
 
   pullDomainEvents(): DomainEvent[] {

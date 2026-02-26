@@ -8,9 +8,10 @@
         private readonly id: string;
         private readonly name: string;
         private readonly order: number;
+        private readonly config?: any;
         private status: ProcessStepStatus;
 
-        constructor(params: { id: string; name: string; order: number }) {
+        constructor(params: { id: string; name: string; order: number; config?: any }) {
             if (!params.name.trim()) {
                 throw new EmptyStepNameError();
             }
@@ -24,6 +25,7 @@
             this.id = params.id;
             this.name = params.name;
             this.order = params.order;
+            this.config = params.config;
             this.status = ProcessStepStatus.ACTIVE;
         }
 
@@ -37,6 +39,9 @@
         }
         getOrder(): number {
             return this.order;
+        }
+        getConfig(): any {
+            return this.config;
         }
         isActive(): boolean {
             return this.status === ProcessStepStatus.ACTIVE;

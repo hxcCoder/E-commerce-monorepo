@@ -20,8 +20,7 @@
     "dist",
     "tests",
     "prisma",
-    "config",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "config"
+    // test files are intentionally included so IDE sees Jest globals
   ]
 }

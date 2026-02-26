@@ -41,13 +41,21 @@ export class ExecutionStep {
 
   static rehydrate(params: {
     stepId: string;
-    nameSnapshot: string;
-    orderSnapshot: number;
+    nameSnapshot?: string;
+    orderSnapshot?: number;
     configSnapshot?: any;
     status: ExecutionStepStatus;
     completedAt?: Date;
   }): ExecutionStep {
-    return new ExecutionStep(params);
+    // tests may only supply stepId and status, so provide reasonable defaults
+    return new ExecutionStep({
+      stepId: params.stepId,
+      nameSnapshot: params.nameSnapshot ?? '',
+      orderSnapshot: params.orderSnapshot ?? 0,
+      configSnapshot: params.configSnapshot,
+      status: params.status,
+      completedAt: params.completedAt,
+    });
   }
 
   markDone(): void {

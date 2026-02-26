@@ -1,12 +1,15 @@
     export abstract class DomainError extends Error {
-public readonly occurredAt: Date;
+    public readonly occurredAt: Date;
+    public readonly code?: string;
 
-protected constructor(message: string) {
-    super(message);
+    protected constructor(message: string, code?: string) {
+        super(message);
 
-    this.name = this.constructor.name;
-    this.occurredAt = new Date();
+        this.name = this.constructor.name;
+        this.occurredAt = new Date();
+        this.code = code;
 
-    Object.setPrototypeOf(this, new.target.prototype);
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
 }
-}
+
