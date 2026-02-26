@@ -9,22 +9,15 @@ export class InMemoryOrderRepository implements OrderRepository {
     }
 
     async save(order: Order): Promise<void> {
-        const key = this.findExistingKey(order) ?? `order-${this.orders.size + 1}`;
-        this.orders.set(key, order);
-    }
-
-    private findExistingKey(order: Order): string | null {
-        for (const [id, stored] of this.orders.entries()) {
-            if (stored === order) {
-                return id;
-            }
-        }
-        return null;
+        // use the id provided by the domain entity
+        this.orders.set(order.id, order);
     }
 
     // ===== Helpers SOLO para tests =====
 
     saveWithId(id: string, order: Order): void {
+        // override if you need a specific id in a test
+        (order as any).id = id;
         this.orders.set(id, order);
     }
 

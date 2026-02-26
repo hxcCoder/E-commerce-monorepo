@@ -12,6 +12,7 @@ describe('Order Entity', () => {
     
     const order = Order.create([item]);
 
+    expect(order.id).toBeDefined();
     expect(order.getStatus()).toBe(OrderStatus.Created);
     expect(order.getTotalAmount()).toBe(200);
 });

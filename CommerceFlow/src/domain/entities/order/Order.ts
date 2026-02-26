@@ -5,12 +5,16 @@ import {
     OrderCannotBeFulfilledError,
 } from './OrderErrors';
 
+import { randomUUID } from 'crypto';
+
 export class Order {
+    readonly id: string;
     private status: OrderStatus;
     private readonly items: OrderItem[];
     private readonly createdAt: Date;
 
-    private constructor(items: OrderItem[]) {
+    private constructor(id: string, items: OrderItem[]) {
+        this.id = id;
         this.items = items;
         this.status = OrderStatus.Created;
         this.createdAt = new Date();
@@ -20,7 +24,8 @@ export class Order {
         if (items.length === 0) {
             throw new Error('Order.mustHaveAtLeastOneItem');
         }
-        return new Order(items);
+        const id = randomUUID();
+        return new Order(id, items);
     }
 
     requestPayment(): void {
