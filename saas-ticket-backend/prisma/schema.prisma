@@ -57,7 +57,7 @@ model ProcessStep {
   id        String  @id @default(uuid())
   processId String
   name      String
-  order   Int
+  order     Int
   config    Json?
 
   process Process @relation(fields: [processId], references: [id], onDelete: Cascade)

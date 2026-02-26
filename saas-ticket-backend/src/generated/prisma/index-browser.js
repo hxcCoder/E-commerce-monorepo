@@ -124,54 +124,63 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.OrganizationScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  status: 'status',
-  plan: 'plan',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.ProcessScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  status: 'status',
   organizationId: 'organizationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  name: 'name',
+  version: 'version',
+  status: 'status',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ProcessStepScalarFieldEnum = {
   id: 'id',
   processId: 'processId',
   name: 'name',
-  order: 'order'
+  order: 'order',
+  config: 'config'
 };
 
 exports.Prisma.ExecutionScalarFieldEnum = {
   id: 'id',
   processId: 'processId',
   status: 'status',
-  startedAt: 'startedAt'
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ExecutionStepScalarFieldEnum = {
   id: 'id',
   executionId: 'executionId',
   stepId: 'stepId',
-  status: 'status'
+  nameSnapshot: 'nameSnapshot',
+  orderSnapshot: 'orderSnapshot',
+  configSnapshot: 'configSnapshot',
+  status: 'status',
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.OutboxScalarFieldEnum = {
   id: 'id',
-  eventName: 'eventName',
+  aggregateId: 'aggregateId',
+  type: 'type',
   payload: 'payload',
-  published: 'published',
   occurredOn: 'occurredOn',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  published: 'published'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.JsonNullValueInput = {
@@ -188,6 +197,25 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.ProcessStatus = exports.$Enums.ProcessStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.ExecutionStatus = exports.$Enums.ExecutionStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.StepStatus = exports.$Enums.StepStatus = {
   PENDING: 'PENDING',
   DONE: 'DONE',

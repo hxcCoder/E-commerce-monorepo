@@ -96,54 +96,63 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.OrganizationScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  status: 'status',
-  plan: 'plan',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.ProcessScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  status: 'status',
   organizationId: 'organizationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  name: 'name',
+  version: 'version',
+  status: 'status',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ProcessStepScalarFieldEnum = {
   id: 'id',
   processId: 'processId',
   name: 'name',
-  order: 'order'
+  order: 'order',
+  config: 'config'
 };
 
 exports.Prisma.ExecutionScalarFieldEnum = {
   id: 'id',
   processId: 'processId',
   status: 'status',
-  startedAt: 'startedAt'
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ExecutionStepScalarFieldEnum = {
   id: 'id',
   executionId: 'executionId',
   stepId: 'stepId',
-  status: 'status'
+  nameSnapshot: 'nameSnapshot',
+  orderSnapshot: 'orderSnapshot',
+  configSnapshot: 'configSnapshot',
+  status: 'status',
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.OutboxScalarFieldEnum = {
   id: 'id',
-  eventName: 'eventName',
+  aggregateId: 'aggregateId',
+  type: 'type',
   payload: 'payload',
-  published: 'published',
   occurredOn: 'occurredOn',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  published: 'published'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.JsonNullValueInput = {
@@ -160,6 +169,25 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.ProcessStatus = exports.$Enums.ProcessStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.ExecutionStatus = exports.$Enums.ExecutionStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.StepStatus = exports.$Enums.StepStatus = {
   PENDING: 'PENDING',
   DONE: 'DONE',
@@ -213,6 +241,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -221,13 +250,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\n/**\n * =========================\n * ORGANIZATION\n * =========================\n */\nmodel Organization {\n  id        String    @id @default(uuid())\n  name      String\n  status    String\n  plan      String\n  processes Process[]\n  createdAt DateTime  @default(now())\n}\n\n/**\n * =========================\n * PROCESS\n * =========================\n */\nmodel Process {\n  id             String       @id @default(uuid())\n  name           String\n  status         String\n  organizationId String\n  organization   Organization @relation(fields: [organizationId], references: [id])\n\n  steps      ProcessStep[]\n  executions Execution[]\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\n/**\n * =========================\n * PROCESS STEP\n * =========================\n */\nmodel ProcessStep {\n  id        String @id @default(uuid())\n  processId String\n  name      String\n  order     Int\n\n  process    Process         @relation(fields: [processId], references: [id], onDelete: Cascade)\n  executions ExecutionStep[] @relation(\"ProcessStepExecutions\")\n\n  @@unique([processId, order])\n}\n\n/**\n * =========================\n * EXECUTION\n * =========================\n */\nmodel Execution {\n  id        String   @id @default(uuid())\n  processId String\n  status    String\n  startedAt DateTime @default(now())\n\n  process Process         @relation(fields: [processId], references: [id])\n  steps   ExecutionStep[] @relation(\"ExecutionSteps\")\n}\n\n/**\n * =========================\n * EXECUTION STEP\n * =========================\n */\nmodel ExecutionStep {\n  id          String     @id @default(uuid())\n  executionId String\n  stepId      String\n  status      StepStatus\n\n  execution   Execution   @relation(fields: [executionId], references: [id], name: \"ExecutionSteps\")\n  processStep ProcessStep @relation(fields: [stepId], references: [id], name: \"ProcessStepExecutions\")\n\n  @@unique([executionId, stepId])\n}\n\n/**\n * =========================\n * OUTBOX\n * =========================\n */\nmodel Outbox {\n  id         String   @id @default(uuid())\n  eventName  String\n  payload    Json\n  published  Boolean  @default(false)\n  occurredOn DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n\n/**\n * =========================\n * ENUMS\n * =========================\n */\nenum StepStatus {\n  PENDING\n  DONE\n  FAILED\n}\n",
-  "inlineSchemaHash": "9c01720cc627d9328942de282fbf3fa9500e92db9dd7177b9ff2447fae2a435a",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum ProcessStatus {\n  DRAFT\n  ACTIVE\n  ARCHIVED\n}\n\nenum ExecutionStatus {\n  PENDING\n  RUNNING\n  COMPLETED\n  FAILED\n  CANCELLED\n}\n\nenum StepStatus {\n  PENDING\n  DONE\n  FAILED\n}\n\nmodel Organization {\n  id        String   @id @default(uuid())\n  name      String\n  createdAt DateTime @default(now())\n\n  processes Process[]\n}\n\nmodel Process {\n  id             String        @id @default(uuid())\n  organizationId String\n  name           String\n  version        Int\n  status         ProcessStatus\n  createdAt      DateTime      @default(now())\n\n  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n\n  steps      ProcessStep[]\n  executions Execution[]\n\n  @@unique([organizationId, name, version])\n  @@index([organizationId])\n}\n\nmodel ProcessStep {\n  id        String @id @default(uuid())\n  processId String\n  name      String\n  order     Int\n  config    Json?\n\n  process Process @relation(fields: [processId], references: [id], onDelete: Cascade)\n\n  @@unique([processId, order])\n  @@index([processId])\n}\n\nmodel Execution {\n  id         String          @id @default(uuid())\n  processId  String\n  status     ExecutionStatus\n  startedAt  DateTime        @default(now())\n  finishedAt DateTime?\n  createdAt  DateTime        @default(now())\n\n  process Process @relation(fields: [processId], references: [id], onDelete: Restrict)\n\n  steps ExecutionStep[]\n\n  @@index([processId])\n  @@index([status])\n}\n\nmodel ExecutionStep {\n  id             String     @id @default(uuid())\n  executionId    String\n  stepId         String\n  nameSnapshot   String\n  orderSnapshot  Int\n  configSnapshot Json?\n  status         StepStatus @default(PENDING)\n  completedAt    DateTime?\n\n  execution Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)\n\n  @@unique([executionId, stepId])\n  @@index([executionId])\n}\n\nmodel Outbox {\n  id          String   @id @default(uuid())\n  aggregateId String\n  type        String\n  payload     Json\n  occurredOn  DateTime\n  published   Boolean  @default(false)\n\n  @@index([published])\n  @@index([occurredOn])\n}\n",
+  "inlineSchemaHash": "e70724cd7f24bd10c4abac7be67db67d343ec842e0259712b2f1ae62e1f9de53",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Organization\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"plan\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processes\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"OrganizationToProcess\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Process\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"OrganizationToProcess\"},{\"name\":\"steps\",\"kind\":\"object\",\"type\":\"ProcessStep\",\"relationName\":\"ProcessToProcessStep\"},{\"name\":\"executions\",\"kind\":\"object\",\"type\":\"Execution\",\"relationName\":\"ExecutionToProcess\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"ProcessStep\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ProcessToProcessStep\"},{\"name\":\"executions\",\"kind\":\"object\",\"type\":\"ExecutionStep\",\"relationName\":\"ProcessStepExecutions\"}],\"dbName\":null},\"Execution\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ExecutionToProcess\"},{\"name\":\"steps\",\"kind\":\"object\",\"type\":\"ExecutionStep\",\"relationName\":\"ExecutionSteps\"}],\"dbName\":null},\"ExecutionStep\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"executionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stepId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"StepStatus\"},{\"name\":\"execution\",\"kind\":\"object\",\"type\":\"Execution\",\"relationName\":\"ExecutionSteps\"},{\"name\":\"processStep\",\"kind\":\"object\",\"type\":\"ProcessStep\",\"relationName\":\"ProcessStepExecutions\"}],\"dbName\":null},\"Outbox\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"eventName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"published\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"occurredOn\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Organization\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"processes\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"OrganizationToProcess\"}],\"dbName\":null},\"Process\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"version\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ProcessStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"OrganizationToProcess\"},{\"name\":\"steps\",\"kind\":\"object\",\"type\":\"ProcessStep\",\"relationName\":\"ProcessToProcessStep\"},{\"name\":\"executions\",\"kind\":\"object\",\"type\":\"Execution\",\"relationName\":\"ExecutionToProcess\"}],\"dbName\":null},\"ProcessStep\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"config\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ProcessToProcessStep\"}],\"dbName\":null},\"Execution\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ExecutionStatus\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"finishedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ExecutionToProcess\"},{\"name\":\"steps\",\"kind\":\"object\",\"type\":\"ExecutionStep\",\"relationName\":\"ExecutionToExecutionStep\"}],\"dbName\":null},\"ExecutionStep\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"executionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stepId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nameSnapshot\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"orderSnapshot\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"configSnapshot\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"StepStatus\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"execution\",\"kind\":\"object\",\"type\":\"Execution\",\"relationName\":\"ExecutionToExecutionStep\"}],\"dbName\":null},\"Outbox\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"aggregateId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"occurredOn\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"published\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

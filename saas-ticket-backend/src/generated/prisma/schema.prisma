@@ -1,117 +1,111 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
-/**
- * =========================
- * ORGANIZATION
- * =========================
- */
-model Organization {
-  id        String    @id @default(uuid())
-  name      String
-  status    String
-  plan      String
-  processes Process[]
-  createdAt DateTime  @default(now())
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-/**
- * =========================
- * PROCESS
- * =========================
- */
+enum ProcessStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum StepStatus {
+  PENDING
+  DONE
+  FAILED
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  processes Process[]
+}
+
 model Process {
-  id             String       @id @default(uuid())
-  name           String
-  status         String
+  id             String        @id @default(uuid())
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String
+  version        Int
+  status         ProcessStatus
+  createdAt      DateTime      @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   steps      ProcessStep[]
   executions Execution[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@unique([organizationId, name, version])
+  @@index([organizationId])
 }
 
-/**
- * =========================
- * PROCESS STEP
- * =========================
- */
 model ProcessStep {
   id        String @id @default(uuid())
   processId String
   name      String
   order     Int
+  config    Json?
 
-  process    Process         @relation(fields: [processId], references: [id], onDelete: Cascade)
-  executions ExecutionStep[] @relation("ProcessStepExecutions")
+  process Process @relation(fields: [processId], references: [id], onDelete: Cascade)
 
   @@unique([processId, order])
+  @@index([processId])
 }
 
-/**
- * =========================
- * EXECUTION
- * =========================
- */
 model Execution {
-  id        String   @id @default(uuid())
-  processId String
-  status    String
-  startedAt DateTime @default(now())
+  id         String          @id @default(uuid())
+  processId  String
+  status     ExecutionStatus
+  startedAt  DateTime        @default(now())
+  finishedAt DateTime?
+  createdAt  DateTime        @default(now())
 
-  process Process         @relation(fields: [processId], references: [id])
-  steps   ExecutionStep[] @relation("ExecutionSteps")
+  process Process @relation(fields: [processId], references: [id], onDelete: Restrict)
+
+  steps ExecutionStep[]
+
+  @@index([processId])
+  @@index([status])
 }
 
-/**
- * =========================
- * EXECUTION STEP
- * =========================
- */
 model ExecutionStep {
-  id          String     @id @default(uuid())
-  executionId String
-  stepId      String
-  status      StepStatus
+  id             String     @id @default(uuid())
+  executionId    String
+  stepId         String
+  nameSnapshot   String
+  orderSnapshot  Int
+  configSnapshot Json?
+  status         StepStatus @default(PENDING)
+  completedAt    DateTime?
 
-  execution   Execution   @relation(fields: [executionId], references: [id], name: "ExecutionSteps")
-  processStep ProcessStep @relation(fields: [stepId], references: [id], name: "ProcessStepExecutions")
+  execution Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
 
   @@unique([executionId, stepId])
+  @@index([executionId])
 }
 
-/**
- * =========================
- * OUTBOX
- * =========================
- */
 model Outbox {
-  id         String   @id @default(uuid())
-  eventName  String
-  payload    Json
-  published  Boolean  @default(false)
-  occurredOn DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
+  id          String   @id @default(uuid())
+  aggregateId String
+  type        String
+  payload     Json
+  occurredOn  DateTime
+  published   Boolean  @default(false)
 
-/**
- * =========================
- * ENUMS
- * =========================
- */
-enum StepStatus {
-  PENDING
-  DONE
-  FAILED
+  @@index([published])
+  @@index([occurredOn])
 }

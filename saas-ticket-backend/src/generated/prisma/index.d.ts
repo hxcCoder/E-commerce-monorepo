@@ -15,44 +15,32 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 /**
  * Model Organization
- * =========================
- *    ORGANIZATION
- * =========================
+ * 
  */
 export type Organization = $Result.DefaultSelection<Prisma.$OrganizationPayload>
 /**
  * Model Process
- * =========================
- *    PROCESS
- * =========================
+ * 
  */
 export type Process = $Result.DefaultSelection<Prisma.$ProcessPayload>
 /**
  * Model ProcessStep
- * =========================
- *    PROCESS STEP
- * =========================
+ * 
  */
 export type ProcessStep = $Result.DefaultSelection<Prisma.$ProcessStepPayload>
 /**
  * Model Execution
- * =========================
- *    EXECUTION
- * =========================
+ * 
  */
 export type Execution = $Result.DefaultSelection<Prisma.$ExecutionPayload>
 /**
  * Model ExecutionStep
- * =========================
- *    EXECUTION STEP
- * =========================
+ * 
  */
 export type ExecutionStep = $Result.DefaultSelection<Prisma.$ExecutionStepPayload>
 /**
  * Model Outbox
- * =========================
- *    OUTBOX
- * =========================
+ * 
  */
 export type Outbox = $Result.DefaultSelection<Prisma.$OutboxPayload>
 
@@ -60,7 +48,27 @@ export type Outbox = $Result.DefaultSelection<Prisma.$OutboxPayload>
  * Enums
  */
 export namespace $Enums {
-  export const StepStatus: {
+  export const ProcessStatus: {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+export type ProcessStatus = (typeof ProcessStatus)[keyof typeof ProcessStatus]
+
+
+export const ExecutionStatus: {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type ExecutionStatus = (typeof ExecutionStatus)[keyof typeof ExecutionStatus]
+
+
+export const StepStatus: {
   PENDING: 'PENDING',
   DONE: 'DONE',
   FAILED: 'FAILED'
@@ -69,6 +77,14 @@ export namespace $Enums {
 export type StepStatus = (typeof StepStatus)[keyof typeof StepStatus]
 
 }
+
+export type ProcessStatus = $Enums.ProcessStatus
+
+export const ProcessStatus: typeof $Enums.ProcessStatus
+
+export type ExecutionStatus = $Enums.ExecutionStatus
+
+export const ExecutionStatus: typeof $Enums.ExecutionStatus
 
 export type StepStatus = $Enums.StepStatus
 
@@ -1413,37 +1429,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type ProcessStepCountOutputType
-   */
-
-  export type ProcessStepCountOutputType = {
-    executions: number
-  }
-
-  export type ProcessStepCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    executions?: boolean | ProcessStepCountOutputTypeCountExecutionsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * ProcessStepCountOutputType without action
-   */
-  export type ProcessStepCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProcessStepCountOutputType
-     */
-    select?: ProcessStepCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * ProcessStepCountOutputType without action
-   */
-  export type ProcessStepCountOutputTypeCountExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ExecutionStepWhereInput
-  }
-
-
-  /**
    * Count Type ExecutionCountOutputType
    */
 
@@ -1491,24 +1476,18 @@ export namespace Prisma {
   export type OrganizationMinAggregateOutputType = {
     id: string | null
     name: string | null
-    status: string | null
-    plan: string | null
     createdAt: Date | null
   }
 
   export type OrganizationMaxAggregateOutputType = {
     id: string | null
     name: string | null
-    status: string | null
-    plan: string | null
     createdAt: Date | null
   }
 
   export type OrganizationCountAggregateOutputType = {
     id: number
     name: number
-    status: number
-    plan: number
     createdAt: number
     _all: number
   }
@@ -1517,24 +1496,18 @@ export namespace Prisma {
   export type OrganizationMinAggregateInputType = {
     id?: true
     name?: true
-    status?: true
-    plan?: true
     createdAt?: true
   }
 
   export type OrganizationMaxAggregateInputType = {
     id?: true
     name?: true
-    status?: true
-    plan?: true
     createdAt?: true
   }
 
   export type OrganizationCountAggregateInputType = {
     id?: true
     name?: true
-    status?: true
-    plan?: true
     createdAt?: true
     _all?: true
   }
@@ -1614,8 +1587,6 @@ export namespace Prisma {
   export type OrganizationGroupByOutputType = {
     id: string
     name: string
-    status: string
-    plan: string
     createdAt: Date
     _count: OrganizationCountAggregateOutputType | null
     _min: OrganizationMinAggregateOutputType | null
@@ -1639,8 +1610,6 @@ export namespace Prisma {
   export type OrganizationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    status?: boolean
-    plan?: boolean
     createdAt?: boolean
     processes?: boolean | Organization$processesArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
@@ -1649,28 +1618,22 @@ export namespace Prisma {
   export type OrganizationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    status?: boolean
-    plan?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["organization"]>
 
   export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    status?: boolean
-    plan?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["organization"]>
 
   export type OrganizationSelectScalar = {
     id?: boolean
     name?: boolean
-    status?: boolean
-    plan?: boolean
     createdAt?: boolean
   }
 
-  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "plan" | "createdAt", ExtArgs["result"]["organization"]>
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt", ExtArgs["result"]["organization"]>
   export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     processes?: boolean | Organization$processesArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
@@ -1686,8 +1649,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
-      status: string
-      plan: string
       createdAt: Date
     }, ExtArgs["result"]["organization"]>
     composites: {}
@@ -2115,8 +2076,6 @@ export namespace Prisma {
   interface OrganizationFieldRefs {
     readonly id: FieldRef<"Organization", 'String'>
     readonly name: FieldRef<"Organization", 'String'>
-    readonly status: FieldRef<"Organization", 'String'>
-    readonly plan: FieldRef<"Organization", 'String'>
     readonly createdAt: FieldRef<"Organization", 'DateTime'>
   }
     
@@ -2554,64 +2513,82 @@ export namespace Prisma {
 
   export type AggregateProcess = {
     _count: ProcessCountAggregateOutputType | null
+    _avg: ProcessAvgAggregateOutputType | null
+    _sum: ProcessSumAggregateOutputType | null
     _min: ProcessMinAggregateOutputType | null
     _max: ProcessMaxAggregateOutputType | null
   }
 
+  export type ProcessAvgAggregateOutputType = {
+    version: number | null
+  }
+
+  export type ProcessSumAggregateOutputType = {
+    version: number | null
+  }
+
   export type ProcessMinAggregateOutputType = {
     id: string | null
-    name: string | null
-    status: string | null
     organizationId: string | null
+    name: string | null
+    version: number | null
+    status: $Enums.ProcessStatus | null
     createdAt: Date | null
-    updatedAt: Date | null
   }
 
   export type ProcessMaxAggregateOutputType = {
     id: string | null
-    name: string | null
-    status: string | null
     organizationId: string | null
+    name: string | null
+    version: number | null
+    status: $Enums.ProcessStatus | null
     createdAt: Date | null
-    updatedAt: Date | null
   }
 
   export type ProcessCountAggregateOutputType = {
     id: number
-    name: number
-    status: number
     organizationId: number
+    name: number
+    version: number
+    status: number
     createdAt: number
-    updatedAt: number
     _all: number
   }
 
 
+  export type ProcessAvgAggregateInputType = {
+    version?: true
+  }
+
+  export type ProcessSumAggregateInputType = {
+    version?: true
+  }
+
   export type ProcessMinAggregateInputType = {
     id?: true
-    name?: true
-    status?: true
     organizationId?: true
+    name?: true
+    version?: true
+    status?: true
     createdAt?: true
-    updatedAt?: true
   }
 
   export type ProcessMaxAggregateInputType = {
     id?: true
-    name?: true
-    status?: true
     organizationId?: true
+    name?: true
+    version?: true
+    status?: true
     createdAt?: true
-    updatedAt?: true
   }
 
   export type ProcessCountAggregateInputType = {
     id?: true
-    name?: true
-    status?: true
     organizationId?: true
+    name?: true
+    version?: true
+    status?: true
     createdAt?: true
-    updatedAt?: true
     _all?: true
   }
 
@@ -2653,6 +2630,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ProcessAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProcessSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ProcessMinAggregateInputType
@@ -2683,18 +2672,22 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ProcessCountAggregateInputType | true
+    _avg?: ProcessAvgAggregateInputType
+    _sum?: ProcessSumAggregateInputType
     _min?: ProcessMinAggregateInputType
     _max?: ProcessMaxAggregateInputType
   }
 
   export type ProcessGroupByOutputType = {
     id: string
-    name: string
-    status: string
     organizationId: string
+    name: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt: Date
-    updatedAt: Date
     _count: ProcessCountAggregateOutputType | null
+    _avg: ProcessAvgAggregateOutputType | null
+    _sum: ProcessSumAggregateOutputType | null
     _min: ProcessMinAggregateOutputType | null
     _max: ProcessMaxAggregateOutputType | null
   }
@@ -2715,11 +2708,11 @@ export namespace Prisma {
 
   export type ProcessSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    status?: boolean
     organizationId?: boolean
+    name?: boolean
+    version?: boolean
+    status?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     steps?: boolean | Process$stepsArgs<ExtArgs>
     executions?: boolean | Process$executionsArgs<ExtArgs>
@@ -2728,34 +2721,34 @@ export namespace Prisma {
 
   export type ProcessSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    status?: boolean
     organizationId?: boolean
+    name?: boolean
+    version?: boolean
+    status?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["process"]>
 
   export type ProcessSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    status?: boolean
     organizationId?: boolean
+    name?: boolean
+    version?: boolean
+    status?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["process"]>
 
   export type ProcessSelectScalar = {
     id?: boolean
-    name?: boolean
-    status?: boolean
     organizationId?: boolean
+    name?: boolean
+    version?: boolean
+    status?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
   }
 
-  export type ProcessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["process"]>
+  export type ProcessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "version" | "status" | "createdAt", ExtArgs["result"]["process"]>
   export type ProcessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     steps?: boolean | Process$stepsArgs<ExtArgs>
@@ -2778,11 +2771,11 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      name: string
-      status: string
       organizationId: string
+      name: string
+      version: number
+      status: $Enums.ProcessStatus
       createdAt: Date
-      updatedAt: Date
     }, ExtArgs["result"]["process"]>
     composites: {}
   }
@@ -3210,11 +3203,11 @@ export namespace Prisma {
    */
   interface ProcessFieldRefs {
     readonly id: FieldRef<"Process", 'String'>
-    readonly name: FieldRef<"Process", 'String'>
-    readonly status: FieldRef<"Process", 'String'>
     readonly organizationId: FieldRef<"Process", 'String'>
+    readonly name: FieldRef<"Process", 'String'>
+    readonly version: FieldRef<"Process", 'Int'>
+    readonly status: FieldRef<"Process", 'ProcessStatus'>
     readonly createdAt: FieldRef<"Process", 'DateTime'>
-    readonly updatedAt: FieldRef<"Process", 'DateTime'>
   }
     
 
@@ -3716,6 +3709,7 @@ export namespace Prisma {
     processId: number
     name: number
     order: number
+    config: number
     _all: number
   }
 
@@ -3747,6 +3741,7 @@ export namespace Prisma {
     processId?: true
     name?: true
     order?: true
+    config?: true
     _all?: true
   }
 
@@ -3841,6 +3836,7 @@ export namespace Prisma {
     processId: string
     name: string
     order: number
+    config: JsonValue | null
     _count: ProcessStepCountAggregateOutputType | null
     _avg: ProcessStepAvgAggregateOutputType | null
     _sum: ProcessStepSumAggregateOutputType | null
@@ -3867,9 +3863,8 @@ export namespace Prisma {
     processId?: boolean
     name?: boolean
     order?: boolean
+    config?: boolean
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    executions?: boolean | ProcessStep$executionsArgs<ExtArgs>
-    _count?: boolean | ProcessStepCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["processStep"]>
 
   export type ProcessStepSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3877,6 +3872,7 @@ export namespace Prisma {
     processId?: boolean
     name?: boolean
     order?: boolean
+    config?: boolean
     process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["processStep"]>
 
@@ -3885,6 +3881,7 @@ export namespace Prisma {
     processId?: boolean
     name?: boolean
     order?: boolean
+    config?: boolean
     process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["processStep"]>
 
@@ -3893,13 +3890,12 @@ export namespace Prisma {
     processId?: boolean
     name?: boolean
     order?: boolean
+    config?: boolean
   }
 
-  export type ProcessStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "name" | "order", ExtArgs["result"]["processStep"]>
+  export type ProcessStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "name" | "order" | "config", ExtArgs["result"]["processStep"]>
   export type ProcessStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    executions?: boolean | ProcessStep$executionsArgs<ExtArgs>
-    _count?: boolean | ProcessStepCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProcessStepIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     process?: boolean | ProcessDefaultArgs<ExtArgs>
@@ -3912,13 +3908,13 @@ export namespace Prisma {
     name: "ProcessStep"
     objects: {
       process: Prisma.$ProcessPayload<ExtArgs>
-      executions: Prisma.$ExecutionStepPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       processId: string
       name: string
       order: number
+      config: Prisma.JsonValue | null
     }, ExtArgs["result"]["processStep"]>
     composites: {}
   }
@@ -4314,7 +4310,6 @@ export namespace Prisma {
   export interface Prisma__ProcessStepClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    executions<T extends ProcessStep$executionsArgs<ExtArgs> = {}>(args?: Subset<T, ProcessStep$executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4348,6 +4343,7 @@ export namespace Prisma {
     readonly processId: FieldRef<"ProcessStep", 'String'>
     readonly name: FieldRef<"ProcessStep", 'String'>
     readonly order: FieldRef<"ProcessStep", 'Int'>
+    readonly config: FieldRef<"ProcessStep", 'Json'>
   }
     
 
@@ -4744,30 +4740,6 @@ export namespace Prisma {
   }
 
   /**
-   * ProcessStep.executions
-   */
-  export type ProcessStep$executionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ExecutionStep
-     */
-    select?: ExecutionStepSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ExecutionStep
-     */
-    omit?: ExecutionStepOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ExecutionStepInclude<ExtArgs> | null
-    where?: ExecutionStepWhereInput
-    orderBy?: ExecutionStepOrderByWithRelationInput | ExecutionStepOrderByWithRelationInput[]
-    cursor?: ExecutionStepWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ExecutionStepScalarFieldEnum | ExecutionStepScalarFieldEnum[]
-  }
-
-  /**
    * ProcessStep without action
    */
   export type ProcessStepDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4799,15 +4771,19 @@ export namespace Prisma {
   export type ExecutionMinAggregateOutputType = {
     id: string | null
     processId: string | null
-    status: string | null
+    status: $Enums.ExecutionStatus | null
     startedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date | null
   }
 
   export type ExecutionMaxAggregateOutputType = {
     id: string | null
     processId: string | null
-    status: string | null
+    status: $Enums.ExecutionStatus | null
     startedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date | null
   }
 
   export type ExecutionCountAggregateOutputType = {
@@ -4815,6 +4791,8 @@ export namespace Prisma {
     processId: number
     status: number
     startedAt: number
+    finishedAt: number
+    createdAt: number
     _all: number
   }
 
@@ -4824,6 +4802,8 @@ export namespace Prisma {
     processId?: true
     status?: true
     startedAt?: true
+    finishedAt?: true
+    createdAt?: true
   }
 
   export type ExecutionMaxAggregateInputType = {
@@ -4831,6 +4811,8 @@ export namespace Prisma {
     processId?: true
     status?: true
     startedAt?: true
+    finishedAt?: true
+    createdAt?: true
   }
 
   export type ExecutionCountAggregateInputType = {
@@ -4838,6 +4820,8 @@ export namespace Prisma {
     processId?: true
     status?: true
     startedAt?: true
+    finishedAt?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -4916,8 +4900,10 @@ export namespace Prisma {
   export type ExecutionGroupByOutputType = {
     id: string
     processId: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt: Date
+    finishedAt: Date | null
+    createdAt: Date
     _count: ExecutionCountAggregateOutputType | null
     _min: ExecutionMinAggregateOutputType | null
     _max: ExecutionMaxAggregateOutputType | null
@@ -4942,6 +4928,8 @@ export namespace Prisma {
     processId?: boolean
     status?: boolean
     startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
     process?: boolean | ProcessDefaultArgs<ExtArgs>
     steps?: boolean | Execution$stepsArgs<ExtArgs>
     _count?: boolean | ExecutionCountOutputTypeDefaultArgs<ExtArgs>
@@ -4952,6 +4940,8 @@ export namespace Prisma {
     processId?: boolean
     status?: boolean
     startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
     process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["execution"]>
 
@@ -4960,6 +4950,8 @@ export namespace Prisma {
     processId?: boolean
     status?: boolean
     startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
     process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["execution"]>
 
@@ -4968,9 +4960,11 @@ export namespace Prisma {
     processId?: boolean
     status?: boolean
     startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
   }
 
-  export type ExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "status" | "startedAt", ExtArgs["result"]["execution"]>
+  export type ExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "status" | "startedAt" | "finishedAt" | "createdAt", ExtArgs["result"]["execution"]>
   export type ExecutionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     process?: boolean | ProcessDefaultArgs<ExtArgs>
     steps?: boolean | Execution$stepsArgs<ExtArgs>
@@ -4992,8 +4986,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       processId: string
-      status: string
+      status: $Enums.ExecutionStatus
       startedAt: Date
+      finishedAt: Date | null
+      createdAt: Date
     }, ExtArgs["result"]["execution"]>
     composites: {}
   }
@@ -5421,8 +5417,10 @@ export namespace Prisma {
   interface ExecutionFieldRefs {
     readonly id: FieldRef<"Execution", 'String'>
     readonly processId: FieldRef<"Execution", 'String'>
-    readonly status: FieldRef<"Execution", 'String'>
+    readonly status: FieldRef<"Execution", 'ExecutionStatus'>
     readonly startedAt: FieldRef<"Execution", 'DateTime'>
+    readonly finishedAt: FieldRef<"Execution", 'DateTime'>
+    readonly createdAt: FieldRef<"Execution", 'DateTime'>
   }
     
 
@@ -5867,52 +5865,90 @@ export namespace Prisma {
 
   export type AggregateExecutionStep = {
     _count: ExecutionStepCountAggregateOutputType | null
+    _avg: ExecutionStepAvgAggregateOutputType | null
+    _sum: ExecutionStepSumAggregateOutputType | null
     _min: ExecutionStepMinAggregateOutputType | null
     _max: ExecutionStepMaxAggregateOutputType | null
+  }
+
+  export type ExecutionStepAvgAggregateOutputType = {
+    orderSnapshot: number | null
+  }
+
+  export type ExecutionStepSumAggregateOutputType = {
+    orderSnapshot: number | null
   }
 
   export type ExecutionStepMinAggregateOutputType = {
     id: string | null
     executionId: string | null
     stepId: string | null
+    nameSnapshot: string | null
+    orderSnapshot: number | null
     status: $Enums.StepStatus | null
+    completedAt: Date | null
   }
 
   export type ExecutionStepMaxAggregateOutputType = {
     id: string | null
     executionId: string | null
     stepId: string | null
+    nameSnapshot: string | null
+    orderSnapshot: number | null
     status: $Enums.StepStatus | null
+    completedAt: Date | null
   }
 
   export type ExecutionStepCountAggregateOutputType = {
     id: number
     executionId: number
     stepId: number
+    nameSnapshot: number
+    orderSnapshot: number
+    configSnapshot: number
     status: number
+    completedAt: number
     _all: number
   }
 
+
+  export type ExecutionStepAvgAggregateInputType = {
+    orderSnapshot?: true
+  }
+
+  export type ExecutionStepSumAggregateInputType = {
+    orderSnapshot?: true
+  }
 
   export type ExecutionStepMinAggregateInputType = {
     id?: true
     executionId?: true
     stepId?: true
+    nameSnapshot?: true
+    orderSnapshot?: true
     status?: true
+    completedAt?: true
   }
 
   export type ExecutionStepMaxAggregateInputType = {
     id?: true
     executionId?: true
     stepId?: true
+    nameSnapshot?: true
+    orderSnapshot?: true
     status?: true
+    completedAt?: true
   }
 
   export type ExecutionStepCountAggregateInputType = {
     id?: true
     executionId?: true
     stepId?: true
+    nameSnapshot?: true
+    orderSnapshot?: true
+    configSnapshot?: true
     status?: true
+    completedAt?: true
     _all?: true
   }
 
@@ -5954,6 +5990,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ExecutionStepAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExecutionStepSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ExecutionStepMinAggregateInputType
@@ -5984,6 +6032,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ExecutionStepCountAggregateInputType | true
+    _avg?: ExecutionStepAvgAggregateInputType
+    _sum?: ExecutionStepSumAggregateInputType
     _min?: ExecutionStepMinAggregateInputType
     _max?: ExecutionStepMaxAggregateInputType
   }
@@ -5992,8 +6042,14 @@ export namespace Prisma {
     id: string
     executionId: string
     stepId: string
+    nameSnapshot: string
+    orderSnapshot: number
+    configSnapshot: JsonValue | null
     status: $Enums.StepStatus
+    completedAt: Date | null
     _count: ExecutionStepCountAggregateOutputType | null
+    _avg: ExecutionStepAvgAggregateOutputType | null
+    _sum: ExecutionStepSumAggregateOutputType | null
     _min: ExecutionStepMinAggregateOutputType | null
     _max: ExecutionStepMaxAggregateOutputType | null
   }
@@ -6016,61 +6072,74 @@ export namespace Prisma {
     id?: boolean
     executionId?: boolean
     stepId?: boolean
+    nameSnapshot?: boolean
+    orderSnapshot?: boolean
+    configSnapshot?: boolean
     status?: boolean
+    completedAt?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
-    processStep?: boolean | ProcessStepDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionStep"]>
 
   export type ExecutionStepSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     executionId?: boolean
     stepId?: boolean
+    nameSnapshot?: boolean
+    orderSnapshot?: boolean
+    configSnapshot?: boolean
     status?: boolean
+    completedAt?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
-    processStep?: boolean | ProcessStepDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionStep"]>
 
   export type ExecutionStepSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     executionId?: boolean
     stepId?: boolean
+    nameSnapshot?: boolean
+    orderSnapshot?: boolean
+    configSnapshot?: boolean
     status?: boolean
+    completedAt?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
-    processStep?: boolean | ProcessStepDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionStep"]>
 
   export type ExecutionStepSelectScalar = {
     id?: boolean
     executionId?: boolean
     stepId?: boolean
+    nameSnapshot?: boolean
+    orderSnapshot?: boolean
+    configSnapshot?: boolean
     status?: boolean
+    completedAt?: boolean
   }
 
-  export type ExecutionStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "stepId" | "status", ExtArgs["result"]["executionStep"]>
+  export type ExecutionStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "stepId" | "nameSnapshot" | "orderSnapshot" | "configSnapshot" | "status" | "completedAt", ExtArgs["result"]["executionStep"]>
   export type ExecutionStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
-    processStep?: boolean | ProcessStepDefaultArgs<ExtArgs>
   }
   export type ExecutionStepIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
-    processStep?: boolean | ProcessStepDefaultArgs<ExtArgs>
   }
   export type ExecutionStepIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
-    processStep?: boolean | ProcessStepDefaultArgs<ExtArgs>
   }
 
   export type $ExecutionStepPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ExecutionStep"
     objects: {
       execution: Prisma.$ExecutionPayload<ExtArgs>
-      processStep: Prisma.$ProcessStepPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       executionId: string
       stepId: string
+      nameSnapshot: string
+      orderSnapshot: number
+      configSnapshot: Prisma.JsonValue | null
       status: $Enums.StepStatus
+      completedAt: Date | null
     }, ExtArgs["result"]["executionStep"]>
     composites: {}
   }
@@ -6466,7 +6535,6 @@ export namespace Prisma {
   export interface Prisma__ExecutionStepClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     execution<T extends ExecutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExecutionDefaultArgs<ExtArgs>>): Prisma__ExecutionClient<$Result.GetResult<Prisma.$ExecutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    processStep<T extends ProcessStepDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessStepDefaultArgs<ExtArgs>>): Prisma__ProcessStepClient<$Result.GetResult<Prisma.$ProcessStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6499,7 +6567,11 @@ export namespace Prisma {
     readonly id: FieldRef<"ExecutionStep", 'String'>
     readonly executionId: FieldRef<"ExecutionStep", 'String'>
     readonly stepId: FieldRef<"ExecutionStep", 'String'>
+    readonly nameSnapshot: FieldRef<"ExecutionStep", 'String'>
+    readonly orderSnapshot: FieldRef<"ExecutionStep", 'Int'>
+    readonly configSnapshot: FieldRef<"ExecutionStep", 'Json'>
     readonly status: FieldRef<"ExecutionStep", 'StepStatus'>
+    readonly completedAt: FieldRef<"ExecutionStep", 'DateTime'>
   }
     
 
@@ -6926,60 +6998,54 @@ export namespace Prisma {
 
   export type OutboxMinAggregateOutputType = {
     id: string | null
-    eventName: string | null
-    published: boolean | null
+    aggregateId: string | null
+    type: string | null
     occurredOn: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
+    published: boolean | null
   }
 
   export type OutboxMaxAggregateOutputType = {
     id: string | null
-    eventName: string | null
-    published: boolean | null
+    aggregateId: string | null
+    type: string | null
     occurredOn: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
+    published: boolean | null
   }
 
   export type OutboxCountAggregateOutputType = {
     id: number
-    eventName: number
+    aggregateId: number
+    type: number
     payload: number
-    published: number
     occurredOn: number
-    createdAt: number
-    updatedAt: number
+    published: number
     _all: number
   }
 
 
   export type OutboxMinAggregateInputType = {
     id?: true
-    eventName?: true
-    published?: true
+    aggregateId?: true
+    type?: true
     occurredOn?: true
-    createdAt?: true
-    updatedAt?: true
+    published?: true
   }
 
   export type OutboxMaxAggregateInputType = {
     id?: true
-    eventName?: true
-    published?: true
+    aggregateId?: true
+    type?: true
     occurredOn?: true
-    createdAt?: true
-    updatedAt?: true
+    published?: true
   }
 
   export type OutboxCountAggregateInputType = {
     id?: true
-    eventName?: true
+    aggregateId?: true
+    type?: true
     payload?: true
-    published?: true
     occurredOn?: true
-    createdAt?: true
-    updatedAt?: true
+    published?: true
     _all?: true
   }
 
@@ -7057,12 +7123,11 @@ export namespace Prisma {
 
   export type OutboxGroupByOutputType = {
     id: string
-    eventName: string
+    aggregateId: string
+    type: string
     payload: JsonValue
-    published: boolean
     occurredOn: Date
-    createdAt: Date
-    updatedAt: Date
+    published: boolean
     _count: OutboxCountAggregateOutputType | null
     _min: OutboxMinAggregateOutputType | null
     _max: OutboxMaxAggregateOutputType | null
@@ -7084,57 +7149,52 @@ export namespace Prisma {
 
   export type OutboxSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    eventName?: boolean
+    aggregateId?: boolean
+    type?: boolean
     payload?: boolean
-    published?: boolean
     occurredOn?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    published?: boolean
   }, ExtArgs["result"]["outbox"]>
 
   export type OutboxSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    eventName?: boolean
+    aggregateId?: boolean
+    type?: boolean
     payload?: boolean
-    published?: boolean
     occurredOn?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    published?: boolean
   }, ExtArgs["result"]["outbox"]>
 
   export type OutboxSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    eventName?: boolean
+    aggregateId?: boolean
+    type?: boolean
     payload?: boolean
-    published?: boolean
     occurredOn?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    published?: boolean
   }, ExtArgs["result"]["outbox"]>
 
   export type OutboxSelectScalar = {
     id?: boolean
-    eventName?: boolean
+    aggregateId?: boolean
+    type?: boolean
     payload?: boolean
-    published?: boolean
     occurredOn?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    published?: boolean
   }
 
-  export type OutboxOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventName" | "payload" | "published" | "occurredOn" | "createdAt" | "updatedAt", ExtArgs["result"]["outbox"]>
+  export type OutboxOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "aggregateId" | "type" | "payload" | "occurredOn" | "published", ExtArgs["result"]["outbox"]>
 
   export type $OutboxPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Outbox"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      eventName: string
+      aggregateId: string
+      type: string
       payload: Prisma.JsonValue
-      published: boolean
       occurredOn: Date
-      createdAt: Date
-      updatedAt: Date
+      published: boolean
     }, ExtArgs["result"]["outbox"]>
     composites: {}
   }
@@ -7559,12 +7619,11 @@ export namespace Prisma {
    */
   interface OutboxFieldRefs {
     readonly id: FieldRef<"Outbox", 'String'>
-    readonly eventName: FieldRef<"Outbox", 'String'>
+    readonly aggregateId: FieldRef<"Outbox", 'String'>
+    readonly type: FieldRef<"Outbox", 'String'>
     readonly payload: FieldRef<"Outbox", 'Json'>
-    readonly published: FieldRef<"Outbox", 'Boolean'>
     readonly occurredOn: FieldRef<"Outbox", 'DateTime'>
-    readonly createdAt: FieldRef<"Outbox", 'DateTime'>
-    readonly updatedAt: FieldRef<"Outbox", 'DateTime'>
+    readonly published: FieldRef<"Outbox", 'Boolean'>
   }
     
 
@@ -7948,8 +8007,6 @@ export namespace Prisma {
   export const OrganizationScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    status: 'status',
-    plan: 'plan',
     createdAt: 'createdAt'
   };
 
@@ -7958,11 +8015,11 @@ export namespace Prisma {
 
   export const ProcessScalarFieldEnum: {
     id: 'id',
-    name: 'name',
-    status: 'status',
     organizationId: 'organizationId',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    name: 'name',
+    version: 'version',
+    status: 'status',
+    createdAt: 'createdAt'
   };
 
   export type ProcessScalarFieldEnum = (typeof ProcessScalarFieldEnum)[keyof typeof ProcessScalarFieldEnum]
@@ -7972,7 +8029,8 @@ export namespace Prisma {
     id: 'id',
     processId: 'processId',
     name: 'name',
-    order: 'order'
+    order: 'order',
+    config: 'config'
   };
 
   export type ProcessStepScalarFieldEnum = (typeof ProcessStepScalarFieldEnum)[keyof typeof ProcessStepScalarFieldEnum]
@@ -7982,7 +8040,9 @@ export namespace Prisma {
     id: 'id',
     processId: 'processId',
     status: 'status',
-    startedAt: 'startedAt'
+    startedAt: 'startedAt',
+    finishedAt: 'finishedAt',
+    createdAt: 'createdAt'
   };
 
   export type ExecutionScalarFieldEnum = (typeof ExecutionScalarFieldEnum)[keyof typeof ExecutionScalarFieldEnum]
@@ -7992,7 +8052,11 @@ export namespace Prisma {
     id: 'id',
     executionId: 'executionId',
     stepId: 'stepId',
-    status: 'status'
+    nameSnapshot: 'nameSnapshot',
+    orderSnapshot: 'orderSnapshot',
+    configSnapshot: 'configSnapshot',
+    status: 'status',
+    completedAt: 'completedAt'
   };
 
   export type ExecutionStepScalarFieldEnum = (typeof ExecutionStepScalarFieldEnum)[keyof typeof ExecutionStepScalarFieldEnum]
@@ -8000,12 +8064,11 @@ export namespace Prisma {
 
   export const OutboxScalarFieldEnum: {
     id: 'id',
-    eventName: 'eventName',
+    aggregateId: 'aggregateId',
+    type: 'type',
     payload: 'payload',
-    published: 'published',
     occurredOn: 'occurredOn',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    published: 'published'
   };
 
   export type OutboxScalarFieldEnum = (typeof OutboxScalarFieldEnum)[keyof typeof OutboxScalarFieldEnum]
@@ -8017,6 +8080,14 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const JsonNullValueInput: {
@@ -8041,6 +8112,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -8091,16 +8170,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'StepStatus'
+   * Reference to a field of type 'ProcessStatus'
    */
-  export type EnumStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StepStatus'>
+  export type EnumProcessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProcessStatus'>
     
 
 
   /**
-   * Reference to a field of type 'StepStatus[]'
+   * Reference to a field of type 'ProcessStatus[]'
    */
-  export type ListEnumStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StepStatus[]'>
+  export type ListEnumProcessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProcessStatus[]'>
     
 
 
@@ -8115,6 +8194,34 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExecutionStatus'
+   */
+  export type EnumExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExecutionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExecutionStatus[]'
+   */
+  export type ListEnumExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExecutionStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'StepStatus'
+   */
+  export type EnumStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StepStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'StepStatus[]'
+   */
+  export type ListEnumStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StepStatus[]'>
     
 
 
@@ -8148,8 +8255,6 @@ export namespace Prisma {
     NOT?: OrganizationWhereInput | OrganizationWhereInput[]
     id?: StringFilter<"Organization"> | string
     name?: StringFilter<"Organization"> | string
-    status?: StringFilter<"Organization"> | string
-    plan?: StringFilter<"Organization"> | string
     createdAt?: DateTimeFilter<"Organization"> | Date | string
     processes?: ProcessListRelationFilter
   }
@@ -8157,8 +8262,6 @@ export namespace Prisma {
   export type OrganizationOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    status?: SortOrder
-    plan?: SortOrder
     createdAt?: SortOrder
     processes?: ProcessOrderByRelationAggregateInput
   }
@@ -8169,8 +8272,6 @@ export namespace Prisma {
     OR?: OrganizationWhereInput[]
     NOT?: OrganizationWhereInput | OrganizationWhereInput[]
     name?: StringFilter<"Organization"> | string
-    status?: StringFilter<"Organization"> | string
-    plan?: StringFilter<"Organization"> | string
     createdAt?: DateTimeFilter<"Organization"> | Date | string
     processes?: ProcessListRelationFilter
   }, "id">
@@ -8178,8 +8279,6 @@ export namespace Prisma {
   export type OrganizationOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    status?: SortOrder
-    plan?: SortOrder
     createdAt?: SortOrder
     _count?: OrganizationCountOrderByAggregateInput
     _max?: OrganizationMaxOrderByAggregateInput
@@ -8192,8 +8291,6 @@ export namespace Prisma {
     NOT?: OrganizationScalarWhereWithAggregatesInput | OrganizationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Organization"> | string
     name?: StringWithAggregatesFilter<"Organization"> | string
-    status?: StringWithAggregatesFilter<"Organization"> | string
-    plan?: StringWithAggregatesFilter<"Organization"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
   }
 
@@ -8202,11 +8299,11 @@ export namespace Prisma {
     OR?: ProcessWhereInput[]
     NOT?: ProcessWhereInput | ProcessWhereInput[]
     id?: StringFilter<"Process"> | string
-    name?: StringFilter<"Process"> | string
-    status?: StringFilter<"Process"> | string
     organizationId?: StringFilter<"Process"> | string
+    name?: StringFilter<"Process"> | string
+    version?: IntFilter<"Process"> | number
+    status?: EnumProcessStatusFilter<"Process"> | $Enums.ProcessStatus
     createdAt?: DateTimeFilter<"Process"> | Date | string
-    updatedAt?: DateTimeFilter<"Process"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     steps?: ProcessStepListRelationFilter
     executions?: ExecutionListRelationFilter
@@ -8214,11 +8311,11 @@ export namespace Prisma {
 
   export type ProcessOrderByWithRelationInput = {
     id?: SortOrder
-    name?: SortOrder
-    status?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    version?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
     steps?: ProcessStepOrderByRelationAggregateInput
     executions?: ExecutionOrderByRelationAggregateInput
@@ -8226,29 +8323,32 @@ export namespace Prisma {
 
   export type ProcessWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    organizationId_name_version?: ProcessOrganizationIdNameVersionCompoundUniqueInput
     AND?: ProcessWhereInput | ProcessWhereInput[]
     OR?: ProcessWhereInput[]
     NOT?: ProcessWhereInput | ProcessWhereInput[]
-    name?: StringFilter<"Process"> | string
-    status?: StringFilter<"Process"> | string
     organizationId?: StringFilter<"Process"> | string
+    name?: StringFilter<"Process"> | string
+    version?: IntFilter<"Process"> | number
+    status?: EnumProcessStatusFilter<"Process"> | $Enums.ProcessStatus
     createdAt?: DateTimeFilter<"Process"> | Date | string
-    updatedAt?: DateTimeFilter<"Process"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     steps?: ProcessStepListRelationFilter
     executions?: ExecutionListRelationFilter
-  }, "id">
+  }, "id" | "organizationId_name_version">
 
   export type ProcessOrderByWithAggregationInput = {
     id?: SortOrder
-    name?: SortOrder
-    status?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    version?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
     _count?: ProcessCountOrderByAggregateInput
+    _avg?: ProcessAvgOrderByAggregateInput
     _max?: ProcessMaxOrderByAggregateInput
     _min?: ProcessMinOrderByAggregateInput
+    _sum?: ProcessSumOrderByAggregateInput
   }
 
   export type ProcessScalarWhereWithAggregatesInput = {
@@ -8256,11 +8356,11 @@ export namespace Prisma {
     OR?: ProcessScalarWhereWithAggregatesInput[]
     NOT?: ProcessScalarWhereWithAggregatesInput | ProcessScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Process"> | string
-    name?: StringWithAggregatesFilter<"Process"> | string
-    status?: StringWithAggregatesFilter<"Process"> | string
     organizationId?: StringWithAggregatesFilter<"Process"> | string
+    name?: StringWithAggregatesFilter<"Process"> | string
+    version?: IntWithAggregatesFilter<"Process"> | number
+    status?: EnumProcessStatusWithAggregatesFilter<"Process"> | $Enums.ProcessStatus
     createdAt?: DateTimeWithAggregatesFilter<"Process"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Process"> | Date | string
   }
 
   export type ProcessStepWhereInput = {
@@ -8271,8 +8371,8 @@ export namespace Prisma {
     processId?: StringFilter<"ProcessStep"> | string
     name?: StringFilter<"ProcessStep"> | string
     order?: IntFilter<"ProcessStep"> | number
+    config?: JsonNullableFilter<"ProcessStep">
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
-    executions?: ExecutionStepListRelationFilter
   }
 
   export type ProcessStepOrderByWithRelationInput = {
@@ -8280,8 +8380,8 @@ export namespace Prisma {
     processId?: SortOrder
     name?: SortOrder
     order?: SortOrder
+    config?: SortOrderInput | SortOrder
     process?: ProcessOrderByWithRelationInput
-    executions?: ExecutionStepOrderByRelationAggregateInput
   }
 
   export type ProcessStepWhereUniqueInput = Prisma.AtLeast<{
@@ -8293,8 +8393,8 @@ export namespace Prisma {
     processId?: StringFilter<"ProcessStep"> | string
     name?: StringFilter<"ProcessStep"> | string
     order?: IntFilter<"ProcessStep"> | number
+    config?: JsonNullableFilter<"ProcessStep">
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
-    executions?: ExecutionStepListRelationFilter
   }, "id" | "processId_order">
 
   export type ProcessStepOrderByWithAggregationInput = {
@@ -8302,6 +8402,7 @@ export namespace Prisma {
     processId?: SortOrder
     name?: SortOrder
     order?: SortOrder
+    config?: SortOrderInput | SortOrder
     _count?: ProcessStepCountOrderByAggregateInput
     _avg?: ProcessStepAvgOrderByAggregateInput
     _max?: ProcessStepMaxOrderByAggregateInput
@@ -8317,6 +8418,7 @@ export namespace Prisma {
     processId?: StringWithAggregatesFilter<"ProcessStep"> | string
     name?: StringWithAggregatesFilter<"ProcessStep"> | string
     order?: IntWithAggregatesFilter<"ProcessStep"> | number
+    config?: JsonNullableWithAggregatesFilter<"ProcessStep">
   }
 
   export type ExecutionWhereInput = {
@@ -8325,8 +8427,10 @@ export namespace Prisma {
     NOT?: ExecutionWhereInput | ExecutionWhereInput[]
     id?: StringFilter<"Execution"> | string
     processId?: StringFilter<"Execution"> | string
-    status?: StringFilter<"Execution"> | string
+    status?: EnumExecutionStatusFilter<"Execution"> | $Enums.ExecutionStatus
     startedAt?: DateTimeFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
+    createdAt?: DateTimeFilter<"Execution"> | Date | string
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
     steps?: ExecutionStepListRelationFilter
   }
@@ -8336,6 +8440,8 @@ export namespace Prisma {
     processId?: SortOrder
     status?: SortOrder
     startedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     process?: ProcessOrderByWithRelationInput
     steps?: ExecutionStepOrderByRelationAggregateInput
   }
@@ -8346,8 +8452,10 @@ export namespace Prisma {
     OR?: ExecutionWhereInput[]
     NOT?: ExecutionWhereInput | ExecutionWhereInput[]
     processId?: StringFilter<"Execution"> | string
-    status?: StringFilter<"Execution"> | string
+    status?: EnumExecutionStatusFilter<"Execution"> | $Enums.ExecutionStatus
     startedAt?: DateTimeFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
+    createdAt?: DateTimeFilter<"Execution"> | Date | string
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
     steps?: ExecutionStepListRelationFilter
   }, "id">
@@ -8357,6 +8465,8 @@ export namespace Prisma {
     processId?: SortOrder
     status?: SortOrder
     startedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     _count?: ExecutionCountOrderByAggregateInput
     _max?: ExecutionMaxOrderByAggregateInput
     _min?: ExecutionMinOrderByAggregateInput
@@ -8368,8 +8478,10 @@ export namespace Prisma {
     NOT?: ExecutionScalarWhereWithAggregatesInput | ExecutionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Execution"> | string
     processId?: StringWithAggregatesFilter<"Execution"> | string
-    status?: StringWithAggregatesFilter<"Execution"> | string
+    status?: EnumExecutionStatusWithAggregatesFilter<"Execution"> | $Enums.ExecutionStatus
     startedAt?: DateTimeWithAggregatesFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableWithAggregatesFilter<"Execution"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Execution"> | Date | string
   }
 
   export type ExecutionStepWhereInput = {
@@ -8379,18 +8491,24 @@ export namespace Prisma {
     id?: StringFilter<"ExecutionStep"> | string
     executionId?: StringFilter<"ExecutionStep"> | string
     stepId?: StringFilter<"ExecutionStep"> | string
+    nameSnapshot?: StringFilter<"ExecutionStep"> | string
+    orderSnapshot?: IntFilter<"ExecutionStep"> | number
+    configSnapshot?: JsonNullableFilter<"ExecutionStep">
     status?: EnumStepStatusFilter<"ExecutionStep"> | $Enums.StepStatus
+    completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
-    processStep?: XOR<ProcessStepScalarRelationFilter, ProcessStepWhereInput>
   }
 
   export type ExecutionStepOrderByWithRelationInput = {
     id?: SortOrder
     executionId?: SortOrder
     stepId?: SortOrder
+    nameSnapshot?: SortOrder
+    orderSnapshot?: SortOrder
+    configSnapshot?: SortOrderInput | SortOrder
     status?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
     execution?: ExecutionOrderByWithRelationInput
-    processStep?: ProcessStepOrderByWithRelationInput
   }
 
   export type ExecutionStepWhereUniqueInput = Prisma.AtLeast<{
@@ -8401,19 +8519,28 @@ export namespace Prisma {
     NOT?: ExecutionStepWhereInput | ExecutionStepWhereInput[]
     executionId?: StringFilter<"ExecutionStep"> | string
     stepId?: StringFilter<"ExecutionStep"> | string
+    nameSnapshot?: StringFilter<"ExecutionStep"> | string
+    orderSnapshot?: IntFilter<"ExecutionStep"> | number
+    configSnapshot?: JsonNullableFilter<"ExecutionStep">
     status?: EnumStepStatusFilter<"ExecutionStep"> | $Enums.StepStatus
+    completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
-    processStep?: XOR<ProcessStepScalarRelationFilter, ProcessStepWhereInput>
   }, "id" | "executionId_stepId">
 
   export type ExecutionStepOrderByWithAggregationInput = {
     id?: SortOrder
     executionId?: SortOrder
     stepId?: SortOrder
+    nameSnapshot?: SortOrder
+    orderSnapshot?: SortOrder
+    configSnapshot?: SortOrderInput | SortOrder
     status?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
     _count?: ExecutionStepCountOrderByAggregateInput
+    _avg?: ExecutionStepAvgOrderByAggregateInput
     _max?: ExecutionStepMaxOrderByAggregateInput
     _min?: ExecutionStepMinOrderByAggregateInput
+    _sum?: ExecutionStepSumOrderByAggregateInput
   }
 
   export type ExecutionStepScalarWhereWithAggregatesInput = {
@@ -8423,7 +8550,11 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ExecutionStep"> | string
     executionId?: StringWithAggregatesFilter<"ExecutionStep"> | string
     stepId?: StringWithAggregatesFilter<"ExecutionStep"> | string
+    nameSnapshot?: StringWithAggregatesFilter<"ExecutionStep"> | string
+    orderSnapshot?: IntWithAggregatesFilter<"ExecutionStep"> | number
+    configSnapshot?: JsonNullableWithAggregatesFilter<"ExecutionStep">
     status?: EnumStepStatusWithAggregatesFilter<"ExecutionStep"> | $Enums.StepStatus
+    completedAt?: DateTimeNullableWithAggregatesFilter<"ExecutionStep"> | Date | string | null
   }
 
   export type OutboxWhereInput = {
@@ -8431,22 +8562,20 @@ export namespace Prisma {
     OR?: OutboxWhereInput[]
     NOT?: OutboxWhereInput | OutboxWhereInput[]
     id?: StringFilter<"Outbox"> | string
-    eventName?: StringFilter<"Outbox"> | string
+    aggregateId?: StringFilter<"Outbox"> | string
+    type?: StringFilter<"Outbox"> | string
     payload?: JsonFilter<"Outbox">
-    published?: BoolFilter<"Outbox"> | boolean
     occurredOn?: DateTimeFilter<"Outbox"> | Date | string
-    createdAt?: DateTimeFilter<"Outbox"> | Date | string
-    updatedAt?: DateTimeFilter<"Outbox"> | Date | string
+    published?: BoolFilter<"Outbox"> | boolean
   }
 
   export type OutboxOrderByWithRelationInput = {
     id?: SortOrder
-    eventName?: SortOrder
+    aggregateId?: SortOrder
+    type?: SortOrder
     payload?: SortOrder
-    published?: SortOrder
     occurredOn?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    published?: SortOrder
   }
 
   export type OutboxWhereUniqueInput = Prisma.AtLeast<{
@@ -8454,22 +8583,20 @@ export namespace Prisma {
     AND?: OutboxWhereInput | OutboxWhereInput[]
     OR?: OutboxWhereInput[]
     NOT?: OutboxWhereInput | OutboxWhereInput[]
-    eventName?: StringFilter<"Outbox"> | string
+    aggregateId?: StringFilter<"Outbox"> | string
+    type?: StringFilter<"Outbox"> | string
     payload?: JsonFilter<"Outbox">
-    published?: BoolFilter<"Outbox"> | boolean
     occurredOn?: DateTimeFilter<"Outbox"> | Date | string
-    createdAt?: DateTimeFilter<"Outbox"> | Date | string
-    updatedAt?: DateTimeFilter<"Outbox"> | Date | string
+    published?: BoolFilter<"Outbox"> | boolean
   }, "id">
 
   export type OutboxOrderByWithAggregationInput = {
     id?: SortOrder
-    eventName?: SortOrder
+    aggregateId?: SortOrder
+    type?: SortOrder
     payload?: SortOrder
-    published?: SortOrder
     occurredOn?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    published?: SortOrder
     _count?: OutboxCountOrderByAggregateInput
     _max?: OutboxMaxOrderByAggregateInput
     _min?: OutboxMinOrderByAggregateInput
@@ -8480,19 +8607,16 @@ export namespace Prisma {
     OR?: OutboxScalarWhereWithAggregatesInput[]
     NOT?: OutboxScalarWhereWithAggregatesInput | OutboxScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Outbox"> | string
-    eventName?: StringWithAggregatesFilter<"Outbox"> | string
+    aggregateId?: StringWithAggregatesFilter<"Outbox"> | string
+    type?: StringWithAggregatesFilter<"Outbox"> | string
     payload?: JsonWithAggregatesFilter<"Outbox">
-    published?: BoolWithAggregatesFilter<"Outbox"> | boolean
     occurredOn?: DateTimeWithAggregatesFilter<"Outbox"> | Date | string
-    createdAt?: DateTimeWithAggregatesFilter<"Outbox"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Outbox"> | Date | string
+    published?: BoolWithAggregatesFilter<"Outbox"> | boolean
   }
 
   export type OrganizationCreateInput = {
     id?: string
     name: string
-    status: string
-    plan: string
     createdAt?: Date | string
     processes?: ProcessCreateNestedManyWithoutOrganizationInput
   }
@@ -8500,8 +8624,6 @@ export namespace Prisma {
   export type OrganizationUncheckedCreateInput = {
     id?: string
     name: string
-    status: string
-    plan: string
     createdAt?: Date | string
     processes?: ProcessUncheckedCreateNestedManyWithoutOrganizationInput
   }
@@ -8509,8 +8631,6 @@ export namespace Prisma {
   export type OrganizationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    plan?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processes?: ProcessUpdateManyWithoutOrganizationNestedInput
   }
@@ -8518,8 +8638,6 @@ export namespace Prisma {
   export type OrganizationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    plan?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processes?: ProcessUncheckedUpdateManyWithoutOrganizationNestedInput
   }
@@ -8527,33 +8645,27 @@ export namespace Prisma {
   export type OrganizationCreateManyInput = {
     id?: string
     name: string
-    status: string
-    plan: string
     createdAt?: Date | string
   }
 
   export type OrganizationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    plan?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrganizationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    plan?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessCreateInput = {
     id?: string
     name: string
-    status: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutProcessesInput
     steps?: ProcessStepCreateNestedManyWithoutProcessInput
     executions?: ExecutionCreateNestedManyWithoutProcessInput
@@ -8561,11 +8673,11 @@ export namespace Prisma {
 
   export type ProcessUncheckedCreateInput = {
     id?: string
-    name: string
-    status: string
     organizationId: string
+    name: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     steps?: ProcessStepUncheckedCreateNestedManyWithoutProcessInput
     executions?: ExecutionUncheckedCreateNestedManyWithoutProcessInput
   }
@@ -8573,9 +8685,9 @@ export namespace Prisma {
   export type ProcessUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutProcessesNestedInput
     steps?: ProcessStepUpdateManyWithoutProcessNestedInput
     executions?: ExecutionUpdateManyWithoutProcessNestedInput
@@ -8583,47 +8695,47 @@ export namespace Prisma {
 
   export type ProcessUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ProcessStepUncheckedUpdateManyWithoutProcessNestedInput
     executions?: ExecutionUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type ProcessCreateManyInput = {
     id?: string
-    name: string
-    status: string
     organizationId: string
+    name: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type ProcessUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessStepCreateInput = {
     id?: string
     name: string
     order: number
+    config?: NullableJsonNullValueInput | InputJsonValue
     process: ProcessCreateNestedOneWithoutStepsInput
-    executions?: ExecutionStepCreateNestedManyWithoutProcessStepInput
   }
 
   export type ProcessStepUncheckedCreateInput = {
@@ -8631,15 +8743,15 @@ export namespace Prisma {
     processId: string
     name: string
     order: number
-    executions?: ExecutionStepUncheckedCreateNestedManyWithoutProcessStepInput
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
+    config?: NullableJsonNullValueInput | InputJsonValue
     process?: ProcessUpdateOneRequiredWithoutStepsNestedInput
-    executions?: ExecutionStepUpdateManyWithoutProcessStepNestedInput
   }
 
   export type ProcessStepUncheckedUpdateInput = {
@@ -8647,7 +8759,7 @@ export namespace Prisma {
     processId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
-    executions?: ExecutionStepUncheckedUpdateManyWithoutProcessStepNestedInput
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepCreateManyInput = {
@@ -8655,12 +8767,14 @@ export namespace Prisma {
     processId: string
     name: string
     order: number
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepUncheckedUpdateManyInput = {
@@ -8668,12 +8782,15 @@ export namespace Prisma {
     processId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionCreateInput = {
     id?: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
     process: ProcessCreateNestedOneWithoutExecutionsInput
     steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
   }
@@ -8681,15 +8798,19 @@ export namespace Prisma {
   export type ExecutionUncheckedCreateInput = {
     id?: string
     processId: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
     steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     process?: ProcessUpdateOneRequiredWithoutExecutionsNestedInput
     steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
   }
@@ -8697,146 +8818,176 @@ export namespace Prisma {
   export type ExecutionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     processId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionCreateManyInput = {
     id?: string
     processId: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type ExecutionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExecutionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     processId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExecutionStepCreateInput = {
     id?: string
-    status: $Enums.StepStatus
+    stepId: string
+    nameSnapshot: string
+    orderSnapshot: number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.StepStatus
+    completedAt?: Date | string | null
     execution: ExecutionCreateNestedOneWithoutStepsInput
-    processStep: ProcessStepCreateNestedOneWithoutExecutionsInput
   }
 
   export type ExecutionStepUncheckedCreateInput = {
     id?: string
     executionId: string
     stepId: string
-    status: $Enums.StepStatus
+    nameSnapshot: string
+    orderSnapshot: number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.StepStatus
+    completedAt?: Date | string | null
   }
 
   export type ExecutionStepUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stepId?: StringFieldUpdateOperationsInput | string
+    nameSnapshot?: StringFieldUpdateOperationsInput | string
+    orderSnapshot?: IntFieldUpdateOperationsInput | number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     execution?: ExecutionUpdateOneRequiredWithoutStepsNestedInput
-    processStep?: ProcessStepUpdateOneRequiredWithoutExecutionsNestedInput
   }
 
   export type ExecutionStepUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     executionId?: StringFieldUpdateOperationsInput | string
     stepId?: StringFieldUpdateOperationsInput | string
+    nameSnapshot?: StringFieldUpdateOperationsInput | string
+    orderSnapshot?: IntFieldUpdateOperationsInput | number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExecutionStepCreateManyInput = {
     id?: string
     executionId: string
     stepId: string
-    status: $Enums.StepStatus
+    nameSnapshot: string
+    orderSnapshot: number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.StepStatus
+    completedAt?: Date | string | null
   }
 
   export type ExecutionStepUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stepId?: StringFieldUpdateOperationsInput | string
+    nameSnapshot?: StringFieldUpdateOperationsInput | string
+    orderSnapshot?: IntFieldUpdateOperationsInput | number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExecutionStepUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     executionId?: StringFieldUpdateOperationsInput | string
     stepId?: StringFieldUpdateOperationsInput | string
+    nameSnapshot?: StringFieldUpdateOperationsInput | string
+    orderSnapshot?: IntFieldUpdateOperationsInput | number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type OutboxCreateInput = {
     id?: string
-    eventName: string
+    aggregateId: string
+    type: string
     payload: JsonNullValueInput | InputJsonValue
-    published?: boolean
     occurredOn: Date | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    published?: boolean
   }
 
   export type OutboxUncheckedCreateInput = {
     id?: string
-    eventName: string
+    aggregateId: string
+    type: string
     payload: JsonNullValueInput | InputJsonValue
-    published?: boolean
     occurredOn: Date | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    published?: boolean
   }
 
   export type OutboxUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventName?: StringFieldUpdateOperationsInput | string
+    aggregateId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    published?: BoolFieldUpdateOperationsInput | boolean
     occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    published?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutboxUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventName?: StringFieldUpdateOperationsInput | string
+    aggregateId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    published?: BoolFieldUpdateOperationsInput | boolean
     occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    published?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutboxCreateManyInput = {
     id?: string
-    eventName: string
+    aggregateId: string
+    type: string
     payload: JsonNullValueInput | InputJsonValue
-    published?: boolean
     occurredOn: Date | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    published?: boolean
   }
 
   export type OutboxUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventName?: StringFieldUpdateOperationsInput | string
+    aggregateId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    published?: BoolFieldUpdateOperationsInput | boolean
     occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    published?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutboxUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    eventName?: StringFieldUpdateOperationsInput | string
+    aggregateId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
     payload?: JsonNullValueInput | InputJsonValue
-    published?: BoolFieldUpdateOperationsInput | boolean
     occurredOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    published?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -8878,24 +9029,18 @@ export namespace Prisma {
   export type OrganizationCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    status?: SortOrder
-    plan?: SortOrder
     createdAt?: SortOrder
   }
 
   export type OrganizationMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    status?: SortOrder
-    plan?: SortOrder
     createdAt?: SortOrder
   }
 
   export type OrganizationMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    status?: SortOrder
-    plan?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -8931,6 +9076,24 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type EnumProcessStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProcessStatus | EnumProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProcessStatusFilter<$PrismaModel> | $Enums.ProcessStatus
+  }
+
   export type OrganizationScalarRelationFilter = {
     is?: OrganizationWhereInput
     isNot?: OrganizationWhereInput
@@ -8956,34 +9119,48 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ProcessOrganizationIdNameVersionCompoundUniqueInput = {
+    organizationId: string
+    name: string
+    version: number
+  }
+
   export type ProcessCountOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    status?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    version?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
+  }
+
+  export type ProcessAvgOrderByAggregateInput = {
+    version?: SortOrder
   }
 
   export type ProcessMaxOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    status?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    version?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
   export type ProcessMinOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    status?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    version?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
+  export type ProcessSumOrderByAggregateInput = {
+    version?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -8991,7 +9168,45 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumProcessStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProcessStatus | EnumProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProcessStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProcessStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProcessStatusFilter<$PrismaModel>
+    _max?: NestedEnumProcessStatusFilter<$PrismaModel>
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type ProcessScalarRelationFilter = {
@@ -8999,14 +9214,9 @@ export namespace Prisma {
     isNot?: ProcessWhereInput
   }
 
-  export type ExecutionStepListRelationFilter = {
-    every?: ExecutionStepWhereInput
-    some?: ExecutionStepWhereInput
-    none?: ExecutionStepWhereInput
-  }
-
-  export type ExecutionStepOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type ProcessStepProcessIdOrderCompoundUniqueInput = {
@@ -9019,6 +9229,7 @@ export namespace Prisma {
     processId?: SortOrder
     name?: SortOrder
     order?: SortOrder
+    config?: SortOrder
   }
 
   export type ProcessStepAvgOrderByAggregateInput = {
@@ -9042,21 +9253,59 @@ export namespace Prisma {
   export type ProcessStepSumOrderByAggregateInput = {
     order?: SortOrder
   }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumExecutionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExecutionStatus | EnumExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExecutionStatusFilter<$PrismaModel> | $Enums.ExecutionStatus
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type ExecutionStepListRelationFilter = {
+    every?: ExecutionStepWhereInput
+    some?: ExecutionStepWhereInput
+    none?: ExecutionStepWhereInput
+  }
+
+  export type ExecutionStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ExecutionCountOrderByAggregateInput = {
@@ -9064,6 +9313,8 @@ export namespace Prisma {
     processId?: SortOrder
     status?: SortOrder
     startedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type ExecutionMaxOrderByAggregateInput = {
@@ -9071,6 +9322,8 @@ export namespace Prisma {
     processId?: SortOrder
     status?: SortOrder
     startedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type ExecutionMinOrderByAggregateInput = {
@@ -9078,6 +9331,32 @@ export namespace Prisma {
     processId?: SortOrder
     status?: SortOrder
     startedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumExecutionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExecutionStatus | EnumExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExecutionStatusWithAggregatesFilter<$PrismaModel> | $Enums.ExecutionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExecutionStatusFilter<$PrismaModel>
+    _max?: NestedEnumExecutionStatusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumStepStatusFilter<$PrismaModel = never> = {
@@ -9092,11 +9371,6 @@ export namespace Prisma {
     isNot?: ExecutionWhereInput
   }
 
-  export type ProcessStepScalarRelationFilter = {
-    is?: ProcessStepWhereInput
-    isNot?: ProcessStepWhereInput
-  }
-
   export type ExecutionStepExecutionIdStepIdCompoundUniqueInput = {
     executionId: string
     stepId: string
@@ -9106,21 +9380,39 @@ export namespace Prisma {
     id?: SortOrder
     executionId?: SortOrder
     stepId?: SortOrder
+    nameSnapshot?: SortOrder
+    orderSnapshot?: SortOrder
+    configSnapshot?: SortOrder
     status?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type ExecutionStepAvgOrderByAggregateInput = {
+    orderSnapshot?: SortOrder
   }
 
   export type ExecutionStepMaxOrderByAggregateInput = {
     id?: SortOrder
     executionId?: SortOrder
     stepId?: SortOrder
+    nameSnapshot?: SortOrder
+    orderSnapshot?: SortOrder
     status?: SortOrder
+    completedAt?: SortOrder
   }
 
   export type ExecutionStepMinOrderByAggregateInput = {
     id?: SortOrder
     executionId?: SortOrder
     stepId?: SortOrder
+    nameSnapshot?: SortOrder
+    orderSnapshot?: SortOrder
     status?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type ExecutionStepSumOrderByAggregateInput = {
+    orderSnapshot?: SortOrder
   }
 
   export type EnumStepStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -9163,30 +9455,27 @@ export namespace Prisma {
 
   export type OutboxCountOrderByAggregateInput = {
     id?: SortOrder
-    eventName?: SortOrder
+    aggregateId?: SortOrder
+    type?: SortOrder
     payload?: SortOrder
-    published?: SortOrder
     occurredOn?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    published?: SortOrder
   }
 
   export type OutboxMaxOrderByAggregateInput = {
     id?: SortOrder
-    eventName?: SortOrder
-    published?: SortOrder
+    aggregateId?: SortOrder
+    type?: SortOrder
     occurredOn?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    published?: SortOrder
   }
 
   export type OutboxMinOrderByAggregateInput = {
     id?: SortOrder
-    eventName?: SortOrder
-    published?: SortOrder
+    aggregateId?: SortOrder
+    type?: SortOrder
     occurredOn?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    published?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -9307,6 +9596,18 @@ export namespace Prisma {
     connect?: ExecutionWhereUniqueInput | ExecutionWhereUniqueInput[]
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type EnumProcessStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ProcessStatus
+  }
+
   export type OrganizationUpdateOneRequiredWithoutProcessesNestedInput = {
     create?: XOR<OrganizationCreateWithoutProcessesInput, OrganizationUncheckedCreateWithoutProcessesInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutProcessesInput
@@ -9377,62 +9678,12 @@ export namespace Prisma {
     connect?: ProcessWhereUniqueInput
   }
 
-  export type ExecutionStepCreateNestedManyWithoutProcessStepInput = {
-    create?: XOR<ExecutionStepCreateWithoutProcessStepInput, ExecutionStepUncheckedCreateWithoutProcessStepInput> | ExecutionStepCreateWithoutProcessStepInput[] | ExecutionStepUncheckedCreateWithoutProcessStepInput[]
-    connectOrCreate?: ExecutionStepCreateOrConnectWithoutProcessStepInput | ExecutionStepCreateOrConnectWithoutProcessStepInput[]
-    createMany?: ExecutionStepCreateManyProcessStepInputEnvelope
-    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-  }
-
-  export type ExecutionStepUncheckedCreateNestedManyWithoutProcessStepInput = {
-    create?: XOR<ExecutionStepCreateWithoutProcessStepInput, ExecutionStepUncheckedCreateWithoutProcessStepInput> | ExecutionStepCreateWithoutProcessStepInput[] | ExecutionStepUncheckedCreateWithoutProcessStepInput[]
-    connectOrCreate?: ExecutionStepCreateOrConnectWithoutProcessStepInput | ExecutionStepCreateOrConnectWithoutProcessStepInput[]
-    createMany?: ExecutionStepCreateManyProcessStepInputEnvelope
-    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type ProcessUpdateOneRequiredWithoutStepsNestedInput = {
     create?: XOR<ProcessCreateWithoutStepsInput, ProcessUncheckedCreateWithoutStepsInput>
     connectOrCreate?: ProcessCreateOrConnectWithoutStepsInput
     upsert?: ProcessUpsertWithoutStepsInput
     connect?: ProcessWhereUniqueInput
     update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutStepsInput, ProcessUpdateWithoutStepsInput>, ProcessUncheckedUpdateWithoutStepsInput>
-  }
-
-  export type ExecutionStepUpdateManyWithoutProcessStepNestedInput = {
-    create?: XOR<ExecutionStepCreateWithoutProcessStepInput, ExecutionStepUncheckedCreateWithoutProcessStepInput> | ExecutionStepCreateWithoutProcessStepInput[] | ExecutionStepUncheckedCreateWithoutProcessStepInput[]
-    connectOrCreate?: ExecutionStepCreateOrConnectWithoutProcessStepInput | ExecutionStepCreateOrConnectWithoutProcessStepInput[]
-    upsert?: ExecutionStepUpsertWithWhereUniqueWithoutProcessStepInput | ExecutionStepUpsertWithWhereUniqueWithoutProcessStepInput[]
-    createMany?: ExecutionStepCreateManyProcessStepInputEnvelope
-    set?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    disconnect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    delete?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    update?: ExecutionStepUpdateWithWhereUniqueWithoutProcessStepInput | ExecutionStepUpdateWithWhereUniqueWithoutProcessStepInput[]
-    updateMany?: ExecutionStepUpdateManyWithWhereWithoutProcessStepInput | ExecutionStepUpdateManyWithWhereWithoutProcessStepInput[]
-    deleteMany?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
-  }
-
-  export type ExecutionStepUncheckedUpdateManyWithoutProcessStepNestedInput = {
-    create?: XOR<ExecutionStepCreateWithoutProcessStepInput, ExecutionStepUncheckedCreateWithoutProcessStepInput> | ExecutionStepCreateWithoutProcessStepInput[] | ExecutionStepUncheckedCreateWithoutProcessStepInput[]
-    connectOrCreate?: ExecutionStepCreateOrConnectWithoutProcessStepInput | ExecutionStepCreateOrConnectWithoutProcessStepInput[]
-    upsert?: ExecutionStepUpsertWithWhereUniqueWithoutProcessStepInput | ExecutionStepUpsertWithWhereUniqueWithoutProcessStepInput[]
-    createMany?: ExecutionStepCreateManyProcessStepInputEnvelope
-    set?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    disconnect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    delete?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
-    update?: ExecutionStepUpdateWithWhereUniqueWithoutProcessStepInput | ExecutionStepUpdateWithWhereUniqueWithoutProcessStepInput[]
-    updateMany?: ExecutionStepUpdateManyWithWhereWithoutProcessStepInput | ExecutionStepUpdateManyWithWhereWithoutProcessStepInput[]
-    deleteMany?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
   }
 
   export type ProcessCreateNestedOneWithoutExecutionsInput = {
@@ -9453,6 +9704,14 @@ export namespace Prisma {
     connectOrCreate?: ExecutionStepCreateOrConnectWithoutExecutionInput | ExecutionStepCreateOrConnectWithoutExecutionInput[]
     createMany?: ExecutionStepCreateManyExecutionInputEnvelope
     connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+  }
+
+  export type EnumExecutionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ExecutionStatus
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type ProcessUpdateOneRequiredWithoutExecutionsNestedInput = {
@@ -9497,12 +9756,6 @@ export namespace Prisma {
     connect?: ExecutionWhereUniqueInput
   }
 
-  export type ProcessStepCreateNestedOneWithoutExecutionsInput = {
-    create?: XOR<ProcessStepCreateWithoutExecutionsInput, ProcessStepUncheckedCreateWithoutExecutionsInput>
-    connectOrCreate?: ProcessStepCreateOrConnectWithoutExecutionsInput
-    connect?: ProcessStepWhereUniqueInput
-  }
-
   export type EnumStepStatusFieldUpdateOperationsInput = {
     set?: $Enums.StepStatus
   }
@@ -9513,14 +9766,6 @@ export namespace Prisma {
     upsert?: ExecutionUpsertWithoutStepsInput
     connect?: ExecutionWhereUniqueInput
     update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutStepsInput, ExecutionUpdateWithoutStepsInput>, ExecutionUncheckedUpdateWithoutStepsInput>
-  }
-
-  export type ProcessStepUpdateOneRequiredWithoutExecutionsNestedInput = {
-    create?: XOR<ProcessStepCreateWithoutExecutionsInput, ProcessStepUncheckedCreateWithoutExecutionsInput>
-    connectOrCreate?: ProcessStepCreateOrConnectWithoutExecutionsInput
-    upsert?: ProcessStepUpsertWithoutExecutionsInput
-    connect?: ProcessStepWhereUniqueInput
-    update?: XOR<XOR<ProcessStepUpdateToOneWithWhereWithoutExecutionsInput, ProcessStepUpdateWithoutExecutionsInput>, ProcessStepUncheckedUpdateWithoutExecutionsInput>
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -9594,6 +9839,13 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumProcessStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProcessStatus | EnumProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProcessStatusFilter<$PrismaModel> | $Enums.ProcessStatus
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -9619,6 +9871,92 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumProcessStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProcessStatus | EnumProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProcessStatus[] | ListEnumProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProcessStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProcessStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProcessStatusFilter<$PrismaModel>
+    _max?: NestedEnumProcessStatusFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumExecutionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExecutionStatus | EnumExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExecutionStatusFilter<$PrismaModel> | $Enums.ExecutionStatus
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedEnumExecutionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExecutionStatus | EnumExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExecutionStatusWithAggregatesFilter<$PrismaModel> | $Enums.ExecutionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExecutionStatusFilter<$PrismaModel>
+    _max?: NestedEnumExecutionStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumStepStatusFilter<$PrismaModel = never> = {
@@ -9677,9 +10015,9 @@ export namespace Prisma {
   export type ProcessCreateWithoutOrganizationInput = {
     id?: string
     name: string
-    status: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     steps?: ProcessStepCreateNestedManyWithoutProcessInput
     executions?: ExecutionCreateNestedManyWithoutProcessInput
   }
@@ -9687,9 +10025,9 @@ export namespace Prisma {
   export type ProcessUncheckedCreateWithoutOrganizationInput = {
     id?: string
     name: string
-    status: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     steps?: ProcessStepUncheckedCreateNestedManyWithoutProcessInput
     executions?: ExecutionUncheckedCreateNestedManyWithoutProcessInput
   }
@@ -9725,26 +10063,22 @@ export namespace Prisma {
     OR?: ProcessScalarWhereInput[]
     NOT?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
     id?: StringFilter<"Process"> | string
-    name?: StringFilter<"Process"> | string
-    status?: StringFilter<"Process"> | string
     organizationId?: StringFilter<"Process"> | string
+    name?: StringFilter<"Process"> | string
+    version?: IntFilter<"Process"> | number
+    status?: EnumProcessStatusFilter<"Process"> | $Enums.ProcessStatus
     createdAt?: DateTimeFilter<"Process"> | Date | string
-    updatedAt?: DateTimeFilter<"Process"> | Date | string
   }
 
   export type OrganizationCreateWithoutProcessesInput = {
     id?: string
     name: string
-    status: string
-    plan: string
     createdAt?: Date | string
   }
 
   export type OrganizationUncheckedCreateWithoutProcessesInput = {
     id?: string
     name: string
-    status: string
-    plan: string
     createdAt?: Date | string
   }
 
@@ -9757,14 +10091,14 @@ export namespace Prisma {
     id?: string
     name: string
     order: number
-    executions?: ExecutionStepCreateNestedManyWithoutProcessStepInput
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepUncheckedCreateWithoutProcessInput = {
     id?: string
     name: string
     order: number
-    executions?: ExecutionStepUncheckedCreateNestedManyWithoutProcessStepInput
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepCreateOrConnectWithoutProcessInput = {
@@ -9779,15 +10113,19 @@ export namespace Prisma {
 
   export type ExecutionCreateWithoutProcessInput = {
     id?: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
     steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateWithoutProcessInput = {
     id?: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
     steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
   }
 
@@ -9815,16 +10153,12 @@ export namespace Prisma {
   export type OrganizationUpdateWithoutProcessesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    plan?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrganizationUncheckedUpdateWithoutProcessesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    plan?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9852,6 +10186,7 @@ export namespace Prisma {
     processId?: StringFilter<"ProcessStep"> | string
     name?: StringFilter<"ProcessStep"> | string
     order?: IntFilter<"ProcessStep"> | number
+    config?: JsonNullableFilter<"ProcessStep">
   }
 
   export type ExecutionUpsertWithWhereUniqueWithoutProcessInput = {
@@ -9876,55 +10211,35 @@ export namespace Prisma {
     NOT?: ExecutionScalarWhereInput | ExecutionScalarWhereInput[]
     id?: StringFilter<"Execution"> | string
     processId?: StringFilter<"Execution"> | string
-    status?: StringFilter<"Execution"> | string
+    status?: EnumExecutionStatusFilter<"Execution"> | $Enums.ExecutionStatus
     startedAt?: DateTimeFilter<"Execution"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
+    createdAt?: DateTimeFilter<"Execution"> | Date | string
   }
 
   export type ProcessCreateWithoutStepsInput = {
     id?: string
     name: string
-    status: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutProcessesInput
     executions?: ExecutionCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessUncheckedCreateWithoutStepsInput = {
     id?: string
-    name: string
-    status: string
     organizationId: string
+    name: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     executions?: ExecutionUncheckedCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessCreateOrConnectWithoutStepsInput = {
     where: ProcessWhereUniqueInput
     create: XOR<ProcessCreateWithoutStepsInput, ProcessUncheckedCreateWithoutStepsInput>
-  }
-
-  export type ExecutionStepCreateWithoutProcessStepInput = {
-    id?: string
-    status: $Enums.StepStatus
-    execution: ExecutionCreateNestedOneWithoutStepsInput
-  }
-
-  export type ExecutionStepUncheckedCreateWithoutProcessStepInput = {
-    id?: string
-    executionId: string
-    status: $Enums.StepStatus
-  }
-
-  export type ExecutionStepCreateOrConnectWithoutProcessStepInput = {
-    where: ExecutionStepWhereUniqueInput
-    create: XOR<ExecutionStepCreateWithoutProcessStepInput, ExecutionStepUncheckedCreateWithoutProcessStepInput>
-  }
-
-  export type ExecutionStepCreateManyProcessStepInputEnvelope = {
-    data: ExecutionStepCreateManyProcessStepInput | ExecutionStepCreateManyProcessStepInput[]
-    skipDuplicates?: boolean
   }
 
   export type ProcessUpsertWithoutStepsInput = {
@@ -9941,66 +10256,40 @@ export namespace Prisma {
   export type ProcessUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutProcessesNestedInput
     executions?: ExecutionUpdateManyWithoutProcessNestedInput
   }
 
   export type ProcessUncheckedUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     executions?: ExecutionUncheckedUpdateManyWithoutProcessNestedInput
-  }
-
-  export type ExecutionStepUpsertWithWhereUniqueWithoutProcessStepInput = {
-    where: ExecutionStepWhereUniqueInput
-    update: XOR<ExecutionStepUpdateWithoutProcessStepInput, ExecutionStepUncheckedUpdateWithoutProcessStepInput>
-    create: XOR<ExecutionStepCreateWithoutProcessStepInput, ExecutionStepUncheckedCreateWithoutProcessStepInput>
-  }
-
-  export type ExecutionStepUpdateWithWhereUniqueWithoutProcessStepInput = {
-    where: ExecutionStepWhereUniqueInput
-    data: XOR<ExecutionStepUpdateWithoutProcessStepInput, ExecutionStepUncheckedUpdateWithoutProcessStepInput>
-  }
-
-  export type ExecutionStepUpdateManyWithWhereWithoutProcessStepInput = {
-    where: ExecutionStepScalarWhereInput
-    data: XOR<ExecutionStepUpdateManyMutationInput, ExecutionStepUncheckedUpdateManyWithoutProcessStepInput>
-  }
-
-  export type ExecutionStepScalarWhereInput = {
-    AND?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
-    OR?: ExecutionStepScalarWhereInput[]
-    NOT?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
-    id?: StringFilter<"ExecutionStep"> | string
-    executionId?: StringFilter<"ExecutionStep"> | string
-    stepId?: StringFilter<"ExecutionStep"> | string
-    status?: EnumStepStatusFilter<"ExecutionStep"> | $Enums.StepStatus
   }
 
   export type ProcessCreateWithoutExecutionsInput = {
     id?: string
     name: string
-    status: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutProcessesInput
     steps?: ProcessStepCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessUncheckedCreateWithoutExecutionsInput = {
     id?: string
-    name: string
-    status: string
     organizationId: string
+    name: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
     steps?: ProcessStepUncheckedCreateNestedManyWithoutProcessInput
   }
 
@@ -10011,14 +10300,22 @@ export namespace Prisma {
 
   export type ExecutionStepCreateWithoutExecutionInput = {
     id?: string
-    status: $Enums.StepStatus
-    processStep: ProcessStepCreateNestedOneWithoutExecutionsInput
+    stepId: string
+    nameSnapshot: string
+    orderSnapshot: number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.StepStatus
+    completedAt?: Date | string | null
   }
 
   export type ExecutionStepUncheckedCreateWithoutExecutionInput = {
     id?: string
     stepId: string
-    status: $Enums.StepStatus
+    nameSnapshot: string
+    orderSnapshot: number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.StepStatus
+    completedAt?: Date | string | null
   }
 
   export type ExecutionStepCreateOrConnectWithoutExecutionInput = {
@@ -10045,20 +10342,20 @@ export namespace Prisma {
   export type ProcessUpdateWithoutExecutionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutProcessesNestedInput
     steps?: ProcessStepUpdateManyWithoutProcessNestedInput
   }
 
   export type ProcessUncheckedUpdateWithoutExecutionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ProcessStepUncheckedUpdateManyWithoutProcessNestedInput
   }
 
@@ -10078,42 +10375,41 @@ export namespace Prisma {
     data: XOR<ExecutionStepUpdateManyMutationInput, ExecutionStepUncheckedUpdateManyWithoutExecutionInput>
   }
 
+  export type ExecutionStepScalarWhereInput = {
+    AND?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
+    OR?: ExecutionStepScalarWhereInput[]
+    NOT?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
+    id?: StringFilter<"ExecutionStep"> | string
+    executionId?: StringFilter<"ExecutionStep"> | string
+    stepId?: StringFilter<"ExecutionStep"> | string
+    nameSnapshot?: StringFilter<"ExecutionStep"> | string
+    orderSnapshot?: IntFilter<"ExecutionStep"> | number
+    configSnapshot?: JsonNullableFilter<"ExecutionStep">
+    status?: EnumStepStatusFilter<"ExecutionStep"> | $Enums.StepStatus
+    completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
+  }
+
   export type ExecutionCreateWithoutStepsInput = {
     id?: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
     process: ProcessCreateNestedOneWithoutExecutionsInput
   }
 
   export type ExecutionUncheckedCreateWithoutStepsInput = {
     id?: string
     processId: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type ExecutionCreateOrConnectWithoutStepsInput = {
     where: ExecutionWhereUniqueInput
     create: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
-  }
-
-  export type ProcessStepCreateWithoutExecutionsInput = {
-    id?: string
-    name: string
-    order: number
-    process: ProcessCreateNestedOneWithoutStepsInput
-  }
-
-  export type ProcessStepUncheckedCreateWithoutExecutionsInput = {
-    id?: string
-    processId: string
-    name: string
-    order: number
-  }
-
-  export type ProcessStepCreateOrConnectWithoutExecutionsInput = {
-    where: ProcessStepWhereUniqueInput
-    create: XOR<ProcessStepCreateWithoutExecutionsInput, ProcessStepUncheckedCreateWithoutExecutionsInput>
   }
 
   export type ExecutionUpsertWithoutStepsInput = {
@@ -10129,57 +10425,36 @@ export namespace Prisma {
 
   export type ExecutionUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     process?: ProcessUpdateOneRequiredWithoutExecutionsNestedInput
   }
 
   export type ExecutionUncheckedUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
     processId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ProcessStepUpsertWithoutExecutionsInput = {
-    update: XOR<ProcessStepUpdateWithoutExecutionsInput, ProcessStepUncheckedUpdateWithoutExecutionsInput>
-    create: XOR<ProcessStepCreateWithoutExecutionsInput, ProcessStepUncheckedCreateWithoutExecutionsInput>
-    where?: ProcessStepWhereInput
-  }
-
-  export type ProcessStepUpdateToOneWithWhereWithoutExecutionsInput = {
-    where?: ProcessStepWhereInput
-    data: XOR<ProcessStepUpdateWithoutExecutionsInput, ProcessStepUncheckedUpdateWithoutExecutionsInput>
-  }
-
-  export type ProcessStepUpdateWithoutExecutionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    order?: IntFieldUpdateOperationsInput | number
-    process?: ProcessUpdateOneRequiredWithoutStepsNestedInput
-  }
-
-  export type ProcessStepUncheckedUpdateWithoutExecutionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    order?: IntFieldUpdateOperationsInput | number
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessCreateManyOrganizationInput = {
     id?: string
     name: string
-    status: string
+    version: number
+    status: $Enums.ProcessStatus
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type ProcessUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ProcessStepUpdateManyWithoutProcessNestedInput
     executions?: ExecutionUpdateManyWithoutProcessNestedInput
   }
@@ -10187,9 +10462,9 @@ export namespace Prisma {
   export type ProcessUncheckedUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ProcessStepUncheckedUpdateManyWithoutProcessNestedInput
     executions?: ExecutionUncheckedUpdateManyWithoutProcessNestedInput
   }
@@ -10197,109 +10472,111 @@ export namespace Prisma {
   export type ProcessUncheckedUpdateManyWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessStepCreateManyProcessInput = {
     id?: string
     name: string
     order: number
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionCreateManyProcessInput = {
     id?: string
-    status: string
+    status: $Enums.ExecutionStatus
     startedAt?: Date | string
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type ProcessStepUpdateWithoutProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
-    executions?: ExecutionStepUpdateManyWithoutProcessStepNestedInput
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepUncheckedUpdateWithoutProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
-    executions?: ExecutionStepUncheckedUpdateManyWithoutProcessStepNestedInput
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProcessStepUncheckedUpdateManyWithoutProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
+    config?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionUpdateWithoutProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateWithoutProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateManyWithoutProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ExecutionStepCreateManyProcessStepInput = {
-    id?: string
-    executionId: string
-    status: $Enums.StepStatus
-  }
-
-  export type ExecutionStepUpdateWithoutProcessStepInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
-    execution?: ExecutionUpdateOneRequiredWithoutStepsNestedInput
-  }
-
-  export type ExecutionStepUncheckedUpdateWithoutProcessStepInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    executionId?: StringFieldUpdateOperationsInput | string
-    status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
-  }
-
-  export type ExecutionStepUncheckedUpdateManyWithoutProcessStepInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    executionId?: StringFieldUpdateOperationsInput | string
-    status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExecutionStepCreateManyExecutionInput = {
     id?: string
     stepId: string
-    status: $Enums.StepStatus
+    nameSnapshot: string
+    orderSnapshot: number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.StepStatus
+    completedAt?: Date | string | null
   }
 
   export type ExecutionStepUpdateWithoutExecutionInput = {
     id?: StringFieldUpdateOperationsInput | string
+    stepId?: StringFieldUpdateOperationsInput | string
+    nameSnapshot?: StringFieldUpdateOperationsInput | string
+    orderSnapshot?: IntFieldUpdateOperationsInput | number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
-    processStep?: ProcessStepUpdateOneRequiredWithoutExecutionsNestedInput
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExecutionStepUncheckedUpdateWithoutExecutionInput = {
     id?: StringFieldUpdateOperationsInput | string
     stepId?: StringFieldUpdateOperationsInput | string
+    nameSnapshot?: StringFieldUpdateOperationsInput | string
+    orderSnapshot?: IntFieldUpdateOperationsInput | number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExecutionStepUncheckedUpdateManyWithoutExecutionInput = {
     id?: StringFieldUpdateOperationsInput | string
     stepId?: StringFieldUpdateOperationsInput | string
+    nameSnapshot?: StringFieldUpdateOperationsInput | string
+    orderSnapshot?: IntFieldUpdateOperationsInput | number
+    configSnapshot?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumStepStatusFieldUpdateOperationsInput | $Enums.StepStatus
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 
