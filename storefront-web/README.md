@@ -44,3 +44,27 @@ Open `http://localhost:3000` (serve) or `http://localhost:8080/storefront-web`.
 - Checkout calls:
   - `POST /api/processes`
   - `POST /api/processes/start-execution`
+
+## Development & Testing
+
+Although the frontend is static, we use npm to manage the packages required for
+running the automated test harness. The test suite is written in TypeScript and
+exercises the same DOM elements used by the application, so it's a great way to
+verify any changes you make to the template.
+
+1. Install dependencies:
+   ```bash
+   cd storefront-web
+   npm install
+   ```
+2. Run the tests:
+   ```bash
+   npm test
+   ```
+
+The jest configuration lives in `jest.config.ts` and uses `ts-jest` with a
+`jsdom` environment. Coverage reports are generated in `coverage/`.
+
+When modifying the HTML or script IDs be sure to update the corresponding tests
+so the suite continues to pass. This gives you confidence as you adapt the
+layout to your own branding or add new features.

@@ -19,36 +19,13 @@ const mockApiResponses = {
   }
 };
 
-class StorefrontTestsuite {
-  private mockFetch: jest.Mock;
-  private mockLocalStorage: any;
-  private mockDOM: any;
+// helpers for tests
 
-  constructor() {
-    this.setupMocks();
-  }
+let mockFetch: jest.Mock;
+let mockLocalStorage: any;
 
-  private setupMocks() {
-    // Mock fetch
-    this.mockFetch = jest.fn();
-    global.fetch = this.mockFetch;
-
-    // Mock localStorage
-    const store: Record<string, string> = {};
-    this.mockLocalStorage = {
-      getItem: (key: string) => store[key] || null,
-      setItem: (key: string, value: string) => { store[key] = value; },
-      removeItem: (key: string) => { delete store[key]; },
-      clear: () => { Object.keys(store).forEach(k => delete store[k]); }
-    };
-    Object.defineProperty(window, 'localStorage', { value: this.mockLocalStorage });
-
-    // Mock DOM elements
-    this.setupDOMElements();
-  }
-
-  private setupDOMElements() {
-    document.body.innerHTML = `
+function setupDOMElements() {
+  document.body.innerHTML = `
       <header class="navbar">
         <div class="nav-brand">EcomFlow</div>
         <nav class="nav-links">
@@ -164,26 +141,49 @@ class StorefrontTestsuite {
         <p>&copy; 2025 EcomFlow. All rights reserved.</p>
       </footer>
     `;
-  }
+}
 
-  /**
-   * State Management Tests
-   */
+function setupMocks() {
+  // Mock fetch
+  mockFetch = jest.fn();
+  global.fetch = mockFetch;
+
+  // Mock localStorage
+  const store: Record<string, string> = {};
+  mockLocalStorage = {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => { store[key] = value; },
+    removeItem: (key: string) => { delete store[key]; },
+    clear: () => { Object.keys(store).forEach(k => delete store[k]); }
+  };
+  Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
+
+  // prepare DOM
+  setupDOMElements();
+}
+
+beforeEach(() => {
+  setupMocks();
+});
+
+/**
+ * State Management Tests
+ */
   // @ts-ignore: Jest globals in non-TS context
   describe('State Management', () => {
     test('should initialize cart as empty array', () => {
-      const cart = this.mockLocalStorage.getItem('CART');
+      const cart = mockLocalStorage.getItem('CART');
       expect(cart).toBeNull(); // Initially empty
     });
 
     test('should initialize session with default user', () => {
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify({
+      mockLocalStorage.setItem('SESSION', JSON.stringify({
         isAuthenticated: false,
         user: null,
         role: 'customer'
       }));
       
-      const session = JSON.parse(this.mockLocalStorage.getItem('SESSION'));
+      const session = JSON.parse(mockLocalStorage.getItem('SESSION'));
       expect(session.isAuthenticated).toBe(false);
       expect(session.role).toBe('customer');
     });
@@ -194,8 +194,8 @@ class StorefrontTestsuite {
         { id: 'prod-2', name: 'T-Shirt', price: 29.99, category: 'clothing' }
       ];
       
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
-      const storedCatalog = JSON.parse(this.mockLocalStorage.getItem('CATALOG'));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
+      const storedCatalog = JSON.parse(mockLocalStorage.getItem('CATALOG'));
       
       expect(storedCatalog).toHaveLength(2);
       expect(storedCatalog[0].name).toBe('Laptop');
@@ -207,7 +207,7 @@ class StorefrontTestsuite {
    */
   describe('Cart Operations', () => {
     beforeEach(() => {
-      this.mockLocalStorage.clear();
+      mockLocalStorage.clear();
     });
 
     test('should add item to empty cart', () => {
@@ -215,9 +215,9 @@ class StorefrontTestsuite {
       const product = { id: 'prod-1', name: 'Laptop', price: 999.99 };
       
       const newCart = [...cart, { ...product, quantity: 1 }];
-      this.mockLocalStorage.setItem('CART', JSON.stringify(newCart));
+      mockLocalStorage.setItem('CART', JSON.stringify(newCart));
       
-      const storedCart = JSON.parse(this.mockLocalStorage.getItem('CART'));
+      const storedCart = JSON.parse(mockLocalStorage.getItem('CART'));
       expect(storedCart).toHaveLength(1);
       expect(storedCart[0].id).toBe('prod-1');
       expect(storedCart[0].quantity).toBe(1);
@@ -304,7 +304,7 @@ class StorefrontTestsuite {
    */
   describe('Product Management', () => {
     beforeEach(() => {
-      this.mockLocalStorage.clear();
+      mockLocalStorage.clear();
     });
 
     test('should render product grid with items', () => {
@@ -313,7 +313,7 @@ class StorefrontTestsuite {
         { id: 'prod-2', name: 'T-Shirt', price: 29.99, category: 'clothing' }
       ];
       
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
       const grid = document.getElementById('products-grid');
       
       expect(grid).toBeInTheDocument();
@@ -372,8 +372,8 @@ class StorefrontTestsuite {
    */
   describe('Admin Product Management', () => {
     beforeEach(() => {
-      this.mockLocalStorage.clear();
-      this.setupDOMElements();
+      mockLocalStorage.clear();
+      setupDOMElements();
     });
 
     test('should create new product', () => {
@@ -384,11 +384,11 @@ class StorefrontTestsuite {
         category: 'electronics'
       };
       
-      const catalog = JSON.parse(this.mockLocalStorage.getItem('CATALOG') || '[]');
+      const catalog = JSON.parse(mockLocalStorage.getItem('CATALOG') || '[]');
       const updatedCatalog = [...catalog, newProduct];
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(updatedCatalog));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(updatedCatalog));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('CATALOG'));
+      const stored = JSON.parse(mockLocalStorage.getItem('CATALOG'));
       expect(stored).toContainEqual(expect.objectContaining({ name: 'New Laptop' }));
     });
 
@@ -396,14 +396,14 @@ class StorefrontTestsuite {
       const catalog = [
         { id: 'prod-1', name: 'Old Name', price: 100, category: 'electronics' }
       ];
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('CATALOG'));
+      const stored = JSON.parse(mockLocalStorage.getItem('CATALOG'));
       stored[0].name = 'Updated Name';
       stored[0].price = 150;
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(stored));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(stored));
       
-      const updated = JSON.parse(this.mockLocalStorage.getItem('CATALOG'));
+      const updated = JSON.parse(mockLocalStorage.getItem('CATALOG'));
       expect(updated[0].name).toBe('Updated Name');
       expect(updated[0].price).toBe(150);
     });
@@ -413,10 +413,10 @@ class StorefrontTestsuite {
         { id: 'prod-1', name: 'Laptop', price: 999.99, category: 'electronics' },
         { id: 'prod-2', name: 'Mouse', price: 29.99, category: 'electronics' }
       ];
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
       
       // Mock delete API call
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockApiResponses.admin.deleteProduct
       });
@@ -424,7 +424,7 @@ class StorefrontTestsuite {
       const result = await fetch('/api/products/prod-1', { method: 'DELETE' });
       
       expect(result.ok).toBe(true);
-      expect(this.mockFetch).toHaveBeenCalledWith('/api/products/prod-1', { method: 'DELETE' });
+      expect(mockFetch).toHaveBeenCalledWith('/api/products/prod-1', { method: 'DELETE' });
     });
 
     test('should validate product form fields', () => {
@@ -445,7 +445,7 @@ class StorefrontTestsuite {
    */
   describe('Authentication & Authorization', () => {
     beforeEach(() => {
-      this.mockLocalStorage.clear();
+      mockLocalStorage.clear();
     });
 
     test('should login as customer', () => {
@@ -456,9 +456,9 @@ class StorefrontTestsuite {
         user: { email: credentials.email },
         role: 'customer'
       };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('SESSION'));
+      const stored = JSON.parse(mockLocalStorage.getItem('SESSION'));
       expect(stored.isAuthenticated).toBe(true);
       expect(stored.role).toBe('customer');
     });
@@ -471,9 +471,9 @@ class StorefrontTestsuite {
         user: { email: credentials.email },
         role: 'employer'
       };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('SESSION'));
+      const stored = JSON.parse(mockLocalStorage.getItem('SESSION'));
       expect(stored.isAuthenticated).toBe(true);
       expect(stored.role).toBe('employer');
     });
@@ -485,20 +485,20 @@ class StorefrontTestsuite {
         user: { email: 'user@example.com' },
         role: 'customer'
       };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
       // Logout
-      this.mockLocalStorage.removeItem('SESSION');
-      this.mockLocalStorage.removeItem('CART');
+      mockLocalStorage.removeItem('SESSION');
+      mockLocalStorage.removeItem('CART');
       
-      expect(this.mockLocalStorage.getItem('SESSION')).toBeNull();
+      expect(mockLocalStorage.getItem('SESSION')).toBeNull();
     });
 
     test('should prevent customer from accessing admin panel', () => {
       const session = { isAuthenticated: true, user: { email: 'user@example.com' }, role: 'customer' };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('SESSION'));
+      const stored = JSON.parse(mockLocalStorage.getItem('SESSION'));
       const canAccessAdmin = stored.role === 'employer';
       
       expect(canAccessAdmin).toBe(false);
@@ -506,9 +506,9 @@ class StorefrontTestsuite {
 
     test('should allow employer to access admin panel', () => {
       const session = { isAuthenticated: true, user: { email: 'admin@example.com' }, role: 'employer' };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('SESSION'));
+      const stored = JSON.parse(mockLocalStorage.getItem('SESSION'));
       const canAccessAdmin = stored.role === 'employer';
       
       expect(canAccessAdmin).toBe(true);
@@ -516,7 +516,7 @@ class StorefrontTestsuite {
 
     test('should hide login button when authenticated', () => {
       const session = { isAuthenticated: true, user: { email: 'user@example.com' }, role: 'customer' };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
       const loginBtn = document.getElementById('login-btn');
       expect(loginBtn).toBeInTheDocument();
@@ -529,8 +529,8 @@ class StorefrontTestsuite {
    */
   describe('Checkout Flow', () => {
     beforeEach(() => {
-      this.mockLocalStorage.clear();
-      this.mockFetch.mockReset();
+      mockLocalStorage.clear();
+      mockFetch.mockReset();
     });
 
     test('should initiate checkout with valid cart', async () => {
@@ -539,7 +539,7 @@ class StorefrontTestsuite {
         { id: 'prod-2', name: 'Mouse', price: 29.99, quantity: 1 }
       ];
       
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockApiResponses.checkout.success
       });
@@ -550,7 +550,7 @@ class StorefrontTestsuite {
         body: JSON.stringify({ items: cart })
       });
       
-      expect(this.mockFetch).toHaveBeenCalledWith(
+      expect(mockFetch).toHaveBeenCalledWith(
         '/api/checkout',
         expect.objectContaining({ method: 'POST' })
       );
@@ -574,7 +574,7 @@ class StorefrontTestsuite {
     });
 
     test('should handle payment failure', async () => {
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => mockApiResponses.checkout.error
       });
@@ -588,12 +588,12 @@ class StorefrontTestsuite {
       const cart = [
         { id: 'prod-1', name: 'Laptop', price: 999.99, quantity: 1 }
       ];
-      this.mockLocalStorage.setItem('CART', JSON.stringify(cart));
+      mockLocalStorage.setItem('CART', JSON.stringify(cart));
       
       // After successful order
-      this.mockLocalStorage.setItem('CART', JSON.stringify([]));
+      mockLocalStorage.setItem('CART', JSON.stringify([]));
       
-      const storedCart = JSON.parse(this.mockLocalStorage.getItem('CART'));
+      const storedCart = JSON.parse(mockLocalStorage.getItem('CART'));
       expect(storedCart).toHaveLength(0);
     });
 
@@ -623,7 +623,7 @@ class StorefrontTestsuite {
    */
   describe('Modal Management', () => {
     beforeEach(() => {
-      this.setupDOMElements();
+      setupDOMElements();
     });
 
     test('should open login modal', () => {
@@ -667,7 +667,7 @@ class StorefrontTestsuite {
    */
   describe('Form Validation', () => {
     beforeEach(() => {
-      this.setupDOMElements();
+      setupDOMElements();
     });
 
     test('should validate email format', () => {
@@ -712,7 +712,7 @@ class StorefrontTestsuite {
    */
   describe('DOM Interactions', () => {
     beforeEach(() => {
-      this.setupDOMElements();
+      setupDOMElements();
     });
 
     test('should render navbar with logo', () => {
@@ -761,7 +761,7 @@ class StorefrontTestsuite {
    */
   describe('API Integration', () => {
     beforeEach(() => {
-      this.mockFetch.mockReset();
+      mockFetch.mockReset();
     });
 
     test('should fetch products from API', async () => {
@@ -769,7 +769,7 @@ class StorefrontTestsuite {
         { id: 'prod-1', name: 'Laptop', price: 999.99, category: 'electronics' }
       ];
       
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockProducts
       });
@@ -781,7 +781,7 @@ class StorefrontTestsuite {
     });
 
     test('should handle API errors gracefully', async () => {
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
         statusText: 'Internal Server Error'
@@ -799,7 +799,7 @@ class StorefrontTestsuite {
         customerEmail: 'user@example.com'
       };
       
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ id: 'order-123', status: 'PAYMENT_PENDING' })
       });
@@ -809,7 +809,7 @@ class StorefrontTestsuite {
         body: JSON.stringify(order)
       });
       
-      expect(this.mockFetch).toHaveBeenCalledWith(
+      expect(mockFetch).toHaveBeenCalledWith(
         '/api/checkout',
         expect.any(Object)
       );
@@ -819,7 +819,7 @@ class StorefrontTestsuite {
     test('should include authorization header in admin requests', async () => {
       const token = 'Bearer abc123';
       
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true })
       });
@@ -828,7 +828,7 @@ class StorefrontTestsuite {
         headers: { 'Authorization': token }
       });
       
-      expect(this.mockFetch).toHaveBeenCalledWith(
+      expect(mockFetch).toHaveBeenCalledWith(
         '/api/admin/products',
         expect.objectContaining({
           headers: expect.objectContaining({ 'Authorization': token })
@@ -842,9 +842,9 @@ class StorefrontTestsuite {
    */
   describe('End-to-End Scenarios', () => {
     beforeEach(() => {
-      this.mockLocalStorage.clear();
-      this.mockFetch.mockReset();
-      this.setupDOMElements();
+      mockLocalStorage.clear();
+      mockFetch.mockReset();
+      setupDOMElements();
     });
 
     test('Guest user browsing → Login → Add to cart → Checkout', async () => {
@@ -852,7 +852,7 @@ class StorefrontTestsuite {
       const catalog = [
         { id: 'prod-1', name: 'Laptop', price: 999.99, category: 'electronics' }
       ];
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
       
       // 2. Login
       const session = {
@@ -860,14 +860,14 @@ class StorefrontTestsuite {
         user: { email: 'user@example.com' },
         role: 'customer'
       };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
       // 3. Add to cart
       const cart = [{ id: 'prod-1', name: 'Laptop', price: 999.99, quantity: 1 }];
-      this.mockLocalStorage.setItem('CART', JSON.stringify(cart));
+      mockLocalStorage.setItem('CART', JSON.stringify(cart));
       
       // 4. Checkout
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ id: 'order-123', status: 'PAYMENT_PENDING' })
       });
@@ -875,7 +875,7 @@ class StorefrontTestsuite {
       const response = await fetch('/api/checkout', { method: 'POST' });
       
       expect(response.ok).toBe(true);
-      expect(this.mockFetch).toHaveBeenCalled();
+      expect(mockFetch).toHaveBeenCalled();
     });
 
     test('Admin login → Create product → Verify in catalog', async () => {
@@ -885,10 +885,10 @@ class StorefrontTestsuite {
         user: { email: 'admin@example.com' },
         role: 'employer'
       };
-      this.mockLocalStorage.setItem('SESSION', JSON.stringify(session));
+      mockLocalStorage.setItem('SESSION', JSON.stringify(session));
       
       // 2. Create product
-      this.mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ id: 'prod-new', name: 'Monitor 4K', price: 499.99 })
       });
@@ -897,11 +897,11 @@ class StorefrontTestsuite {
       const newProduct = await createResponse.json();
       
       // 3. Verify in catalog
-      const catalog = JSON.parse(this.mockLocalStorage.getItem('CATALOG') || '[]');
+      const catalog = JSON.parse(mockLocalStorage.getItem('CATALOG') || '[]');
       catalog.push(newProduct);
-      this.mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
+      mockLocalStorage.setItem('CATALOG', JSON.stringify(catalog));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('CATALOG'));
+      const stored = JSON.parse(mockLocalStorage.getItem('CATALOG'));
       expect(stored).toContainEqual(expect.objectContaining({ name: 'Monitor 4K' }));
     });
 
@@ -922,21 +922,11 @@ class StorefrontTestsuite {
       
       // 3. Add to cart
       const cart = [filtered[0]];
-      this.mockLocalStorage.setItem('CART', JSON.stringify([...cart, { ...filtered[0], quantity: 1 }]));
+      mockLocalStorage.setItem('CART', JSON.stringify([...cart, { ...filtered[0], quantity: 1 }]));
       
-      const stored = JSON.parse(this.mockLocalStorage.getItem('CART'));
+      const stored = JSON.parse(mockLocalStorage.getItem('CART'));
       expect(stored).toContainEqual(expect.objectContaining({ name: 'Laptop Pro' }));
     });
   });
-}
 
-// Run tests
-describe('Storefront Web Integration Tests', () => {
-  const suite = new StorefrontTestsuite();
-  
-  suite.describe('State Management', () => {
-    it('should initialize cart as empty array', () => {
-      suite['describe']('State Management', () => {});
-    });
-  });
-});
+
